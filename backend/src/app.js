@@ -16,10 +16,15 @@ app.use(cors());
 
 // Middleware to parse incoming JSON requests
 app.use(express.json());
+
 // Import the authentication routes
 const authRoutes = require("./routes/authRoutes");
+const containerRoutes = require("./routes/containerRoutes");
 
+// Use the authentication routes for any requests to /api/auth
 app.use("/api/auth", authRoutes);
+app.use("/api/containers", containerRoutes);
+
 
 //check route to verify that the server is running
 app.get('/', (req, res) => {

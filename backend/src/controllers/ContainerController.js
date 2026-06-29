@@ -1,0 +1,79 @@
+// src/controllers/ContainerController.js
+
+const containerService = require("../services/ContainerService");
+
+// Retrieve all containers
+async function getAllContainers(req, res) {
+  try {
+    const containers = await containerService.getAllContainers();
+    res.status(200).json(containers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to retrieve containers." });
+  }
+}
+
+// Retrieve a container by ID
+async function getContainerById(req, res) {
+  try {
+    const { id } = req.params;
+
+    const container = await containerService.getContainerById(id);
+
+    res.status(200).json(container);
+  } catch (error) {
+    console.error(error);
+
+    if (error.message === "Container not found") {
+      return res.status(404).json({ message: error.message });
+    }
+
+    res.status(500).json({ message: "Failed to retrieve container." });
+  }
+}
+
+// Create a new container
+async function createContainer(req, res) {
+  try {
+    const containerId = await containerService.createContainer(req.body);
+
+    res.status(201).json({
+      message: "Container created successfully.",
+      id: containerId,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to create container." });
+  }
+}
+
+// Update an existing container
+async function updateContainer(req, res) {
+  try {
+    const { id } = req.params;
+
+    await containerService.updateContainer(id, req.body);
+
+    res.json({
+      message: "Container updated successfully.",
+    });
+  } catch (error) {
+    console.error(error);
+
+    if (error.message === "Container not found") {
+      return res.status(404).json({ message: error.message });
+    }
+
+    res.status(500).json({ message: "Failed to update container." });
+  }
+}
+
+
+
+module.exports = {
+  getAllContainers,
+  getContainerById,
+  createContainer,
+  updateContainer,
+ 
+};
