@@ -1,0 +1,100 @@
+//src/models/ApprovalModel.js
+const db = require("../config/database");
+
+
+//create a new approval request
+
+async function createApproval(approvalData) {
+
+    const{
+        container_id,
+        from_stage,
+        to_stage,
+        requested_action,
+        comments,
+        requested_by_user_id,
+
+    } = approvalData;
+
+
+    const [result] = await db.query(
+    `INSERT INTO approval_requests
+    (
+      container_id,
+      from_stage,
+      to_stage,
+      requested_action,
+      comments,
+      requested_by_user_id
+    )
+    VALUES (?, ?, ?, ?, ?, ?)`,
+    [
+      container_id,
+      from_stage,
+      to_stage,
+      requested_action,
+      comments,
+      requested_by_user_id,
+    ]
+  );
+
+  return result.insertId;
+}
+// Retrieve all pending approval requests
+async function getPendingApproval(containerId) {
+
+  const [rows] = await db.query(
+    `SELECT *
+     FROM approval_requests
+     WHERE container_id = ?
+     AND status = 'PENDING'`,
+    [containerId]
+  );
+
+  return rows[0] || null;
+}
+
+async function getApprovalById(id) {
+
+  const [rows] = await db.query(
+    "SELECT * FROM approval_requests WHERE id = ?",
+    [id]
+  );
+
+  return rows[0] || null;
+}
+
+async function reviewApproval(id, reviewData) {
+
+  const {
+    status,
+    reviewed_by_user_id,
+    comments,
+  } = reviewData;
+
+  const [result] = await db.query(
+    `UPDATE approval_requests
+     SET
+        status = ?,
+        reviewed_by_user_id = ?,
+        reviewed_at = NOW(),
+        comments = ?
+     WHERE id = ?`,
+    [
+      status,
+      reviewed_by_user_id,
+      comments,
+      id,
+    ]
+  );
+
+  return result.affectedRows > 0;
+}
+
+module.exports = {
+  createApproval,
+  getPendingApproval,
+  getApprovalById,
+  reviewApproval,
+};
+    

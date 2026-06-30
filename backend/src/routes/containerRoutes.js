@@ -4,7 +4,7 @@ const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
 const authorizationMiddleware = require("../middleware/authorizationMiddleware");
 
-const containerController = require("../controllers/ContainerController");
+const containerController = require("../controllers/containerController");
 
 
 // Retrieve all containers
@@ -29,6 +29,12 @@ router.put(
   containerController.updateContainer
 );
 
+//move container to a new location
+router.post(
+  "/:id/move",
+  authMiddleware,
+   containerController.moveContainer
+);
 
 
 module.exports = router;

@@ -20,11 +20,14 @@ app.use(express.json());
 // Import the authentication routes
 const authRoutes = require("./routes/authRoutes");
 const containerRoutes = require("./routes/containerRoutes");
+const processStageRoutes = require("./routes/processStageRoutes");
+const approvalRoutes = require("./routes/approvalRoutes");
 
 // Use the authentication routes for any requests to /api/auth
 app.use("/api/auth", authRoutes);
 app.use("/api/containers", containerRoutes);
-
+app.use("/api/processstages", processStageRoutes);
+app.use("/api/approvals", approvalRoutes);
 
 //check route to verify that the server is running
 app.get('/', (req, res) => {

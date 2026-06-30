@@ -68,12 +68,34 @@ async function updateContainer(req, res) {
   }
 }
 
+//move container through the lifecycle stages and update its location
+async function moveContainer(req,res){
+  try{
 
+    const result = await containerService.moveContainer(
+        req.params.id,
+        req.body,
+        req.user
+    );
+
+    res.json(result);
+    
+
+  } catch (error) {
+    console.error(error);
+
+    if (error.message === "Container not found") {
+      return res.status(404).json({ message: error.message });
+    }
+
+    res.status(500).json({ message: "Failed to move container." });
+  }
+}
 
 module.exports = {
   getAllContainers,
   getContainerById,
   createContainer,
   updateContainer,
- 
+  moveContainer
 };
