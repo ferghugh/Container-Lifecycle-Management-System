@@ -1,20 +1,23 @@
 const approvalModel = require("../models/approvalModel");
 const stageRules = require("../constants/stageRules");
-const movementModel = require("../models/movementModel");
-const containerModel = require("../models/containerModel");
-
-
 
 // Create a pending approval request
 async function createApproval(container, previousStage, nextStage, user) {
-    
-const existing = await approvalModel.getPendingApproval(container.id);
 
-if (existing) {
+  const action = stageRules.getApprovalAction(
+    previousStage,
+    nextStage
+  );
+
+  console.log("Creating approval:", action);
+
+  const existing = await approvalModel.getPendingApproval(container.id);
+
+  if (existing) {
     throw new Error(
-        "A pending approval already exists for this container."
+      "A pending approval already exists for this container."
     );
-}
+  }
 
   const approvalId = await approvalModel.createApproval({
 
@@ -24,10 +27,7 @@ if (existing) {
 
     to_stage: nextStage,
 
-    requested_action: stageRules.getApprovalAction(
-      previousStage,
-      nextStage
-    ),
+    requested_action: action,
 
     comments: "Automatically created by workflow.",
 
@@ -38,94 +38,62 @@ if (existing) {
   return approvalId;
 }
 
+
+ // Review an approval request
 async function reviewApproval(id, reviewData, user) {
 
+  // Retrieve the approval request
   const approval = await approvalModel.getApprovalById(id);
 
   if (!approval) {
     throw new Error("Approval request not found");
   }
 
+  // Prevent multiple reviews
   if (approval.status !== "PENDING") {
     throw new Error("Approval has already been reviewed");
   }
 
+  // Determine the new status
   const status = reviewData.approved
     ? "APPROVED"
     : "REJECTED";
 
+  // Update the approval record
   await approvalModel.reviewApproval(id, {
     status,
     reviewed_by_user_id: user.id,
     comments: reviewData.comments,
   });
 
-  if (status === "REJECTED") {
+  // Return the result
+  if (status === "APPROVED") {
     return {
-      message: "Approval rejected."
+      message: "Approval approved. Container is authorised for movement.",
+      approvalId: approval.id,
     };
   }
 
-  //Retrieve the container
-  const container = await containerModel.getContainerById(
-  approval.container_id
-);
-
-if (!container) {
-  throw new Error("Container not found");
+  return {
+    message: "Approval rejected.",
+    approvalId: approval.id,
+  };
 }
 
-await movementModel.createMovement({
+async function getLatestApproval(containerId,previousStage,  nextStage) {
 
-  container_id: approval.container_id,
+  const action = stageRules.getApprovalAction(previousStage,nextStage);
+  console.log("Looking for approval:", action);
 
-  from_stage: approval.from_stage,
-
-  to_stage: approval.to_stage,
-
-  moved_by_user_id: approval.requested_by_user_id,
-
-  approved_by_user_id: user.id,
-
-});
-await containerModel.updateContainerWorkflow(
-  approval.container_id,
-  {
-    current_status: approval.to_stage,
-
-    location_id: approval.to_stage, // we'll replace this with getLocationForStage()
-
-    is_damaged: container.is_damaged,
-
-    requires_qa_approval: false,
-
-    requires_swab: container.requires_swab,
-
-    last_cycle_start_at:
-      approval.to_stage === stageRules.STAGES.PRODUCTION
-        ? new Date()
-        : container.last_cycle_start_at,
-
-    initial_qa_approved_at:
-      approval.to_stage === stageRules.STAGES.PRODUCTION
-        ? new Date()
-        : container.initial_qa_approved_at,
-  }
-);
-const updatedContainer =
-  await containerModel.getContainerById(
-    approval.container_id
+  return await approvalModel.getLatestApproval(
+    containerId,
+    action
   );
-
-return {
-  message: "Approval completed.",
-  approvalId: approval.id,
-  container: updatedContainer,
-};
-
 }
+
 module.exports = {
   createApproval,
   reviewApproval,
+  getLatestApproval,
 
 };

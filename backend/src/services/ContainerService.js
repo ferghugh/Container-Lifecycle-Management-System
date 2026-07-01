@@ -67,69 +67,141 @@ async function updateContainer(id, containerData) {
   // Call the model function to update the container in the database
   return await containerModel.updateContainer(id, updateData);
 }
-
-// Move a container through the lifecycle stages and update its location
+// Move a container through the lifecycle stages
 async function moveContainer(id, movementData, user) {
+
+  // Retrieve the container
   const container = await containerModel.getContainerById(id);
 
-  // If the container is not found, throw an error
   if (!container) {
     throw new Error("Container not found");
   }
 
-  //get the requested new stage and location from the movementData
+  // Requested destination stage
   const { nextStage } = movementData;
 
   if (!nextStage) {
     throw new Error("Next stage is required");
   }
 
-  //get the current stage of the container
+  // Current stage
   const previousStage = container.current_status;
 
-  //check if the transition is valid
+  // Prevent moving to the same stage
+  if (previousStage === nextStage) {
+    throw new Error("Container is already in this stage.");
+  }
+
+  // Validate the workflow
   if (!stageRules.isValidTransition(previousStage, nextStage)) {
     throw new Error(
-      `Invalid stage transition from ${previousStage} to ${nextStage}`,
+      `Invalid stage transition from ${previousStage} to ${nextStage}`
     );
   }
+
+  // ------------------------------------
+  // APPROVAL WORKFLOW
+  // ------------------------------------
+
+  let approval = null;
+
   if (stageRules.requiresApproval(previousStage, nextStage)) {
 
-    await approvalService.createApproval(
+    approval = await approvalService.getLatestApproval(
+      container.id,
+      previousStage,
+      nextStage
+    );
+
+    // No approval exists
+    if (!approval) {
+
+      await approvalService.createApproval(
         container,
         previousStage,
         nextStage,
         user
-    );
+      );
 
-    return {
-        message: "Approval request created. Awaiting QA approval."
-    };
+      return {
+        message: "Approval required. Request created."
+      };
+    }
 
+    // Approval still waiting
+    if (approval.status === "PENDING") {
+      throw new Error("Approval is still pending.");
+    }
+
+    // Approval rejected
+    if (approval.status === "REJECTED") {
+      throw new Error("Approval was rejected.");
+    }
+
+    // If APPROVED, continue with the move
+  }
+
+
+  // RECORD MOVEMENT
+
+
+  await movementModel.createMovement({
+
+    container_id: container.id,
+
+    from_stage: previousStage,
+
+    to_stage: nextStage,
+
+    moved_by_user_id: user.id,
+
+    approved_by_user_id: approval
+      ? approval.reviewed_by_user_id
+      : null,
+
+  });
+
+  // ------------------------------------
+  // UPDATE CONTAINER
+  // ------------------------------------
+
+  const workflowUpdate = {
+
+    current_status: nextStage,
+
+    location_id: getLocationForStage(nextStage),
+
+    is_damaged: container.is_damaged,
+
+    requires_qa_approval: container.requires_qa_approval,
+
+    requires_swab: container.requires_swab,
+
+    last_cycle_start_at: container.last_cycle_start_at,
+
+    initial_qa_approved_at: container.initial_qa_approved_at,
+  };
+
+  // First time entering Production starts the lifecycle
+if (nextStage === STAGES.PRODUCTION) {
+  workflowUpdate.last_cycle_start_at = new Date();
 }
 
-  //record the movement before updating the container
-  // Record the movement before updating the container
-  await movementModel.createMovement({
-    container_id: container.id,
-    from_stage: previousStage,
-    to_stage: nextStage,
-    moved_by_user_id: user.id,
-    approved_by_user_id: null,
-  });
 
-  //update the container's stage and location in the database
-  await containerModel.updateContainerWorkflow(id, {
-    current_status: nextStage,
-    location_id: getLocationForStage(nextStage),
-    is_damaged: container.is_damaged,
-    requires_qa_approval: container.requires_qa_approval,
-    requires_swab: container.requires_swab,
-    last_cycle_start_at: container.last_cycle_start_at,
-    initial_qa_approved_at: container.initial_qa_approved_at,
-  });
+    
+    if (!container.initial_qa_approved_at) {
+      workflowUpdate.initial_qa_approved_at = new Date();
+    }
+  
 
-  const updatedContainer = await containerModel.getContainerById(id);
+  await containerModel.updateContainerWorkflow(
+    id,
+    workflowUpdate
+  );
+
+  // Retrieve the updated container
+  const updatedContainer =
+    await containerModel.getContainerById(id);
 
   return {
     message: `Container moved from stage ${previousStage} to ${nextStage}.`,

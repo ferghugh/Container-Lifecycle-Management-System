@@ -90,11 +90,27 @@ async function reviewApproval(id, reviewData) {
 
   return result.affectedRows > 0;
 }
+// Retrieve the latest approval for a container movement
+async function getLatestApproval(containerId, requestedAction) {
+
+  const [rows] = await db.query(
+    `SELECT *
+     FROM approval_requests
+     WHERE container_id = ?
+     AND requested_action = ?
+     ORDER BY requested_at DESC
+     LIMIT 1`,
+    [containerId, requestedAction]
+  );
+
+  return rows[0] || null;
+}
 
 module.exports = {
   createApproval,
   getPendingApproval,
   getApprovalById,
   reviewApproval,
+  getLatestApproval,
 };
     
