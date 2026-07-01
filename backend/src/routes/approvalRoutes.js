@@ -20,7 +20,6 @@ router.get(
 router.put(
   "/:id/review",
   authMiddleware,
-  authorizationMiddleware("QA"),
   approvalController.reviewApproval
 );
 

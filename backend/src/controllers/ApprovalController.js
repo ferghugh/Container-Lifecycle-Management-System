@@ -1,5 +1,7 @@
 // src/controllers/ApprovalController.js
 
+// add the endpoints for posting approval and the put for review
+
 const approvalService = require("../services/approvalService");
 
 // Create a new approval request

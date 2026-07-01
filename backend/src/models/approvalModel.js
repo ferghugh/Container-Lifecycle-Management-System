@@ -11,6 +11,7 @@ async function createApproval(approvalData) {
         from_stage,
         to_stage,
         requested_action,
+        required_role,
         comments,
         requested_by_user_id,
 
@@ -24,15 +25,17 @@ async function createApproval(approvalData) {
       from_stage,
       to_stage,
       requested_action,
+      required_role,
       comments,
       requested_by_user_id
     )
-    VALUES (?, ?, ?, ?, ?, ?)`,
+    VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [
       container_id,
       from_stage,
       to_stage,
       requested_action,
+      required_role,
       comments,
       requested_by_user_id,
     ]
