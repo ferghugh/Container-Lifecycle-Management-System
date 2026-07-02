@@ -17,7 +17,11 @@ async function createApproval(container, previousStage, nextStage, user) {
   if (existing) {
     throw new Error("A pending approval already exists for this container.");
   }
-
+console.log("Container flags:", {
+  requires_qa_approval: container.requires_qa_approval,
+  is_damaged: container.is_damaged,
+  requires_swab: container.requires_swab,
+});
   // Determine who must approve this request
   const requiredRole =
     container.requires_qa_approval ||
@@ -36,7 +40,7 @@ async function createApproval(container, previousStage, nextStage, user) {
 
     requested_action: action,
 
-    required_role: required_role,
+    required_role: requiredRole,
 
     comments: "Automatically created by workflow.",
 

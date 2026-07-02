@@ -41,7 +41,7 @@ async function createContainer(containerData) {
   containerData.current_status = STAGES.RECEIVED;
   containerData.location_id = LOCATIONS.RECEIVING; // Set the default location to "Receiving"
   containerData.is_damaged = false;
-  containerData.requires_qa_approval = false;
+  containerData.requires_qa_approval = true;
   containerData.requires_swab = false;
   containerData.last_cycle_start_at = null;
   containerData.initial_qa_approved_at = null;
@@ -181,18 +181,18 @@ async function moveContainer(id, movementData, user) {
 
     initial_qa_approved_at: container.initial_qa_approved_at,
   };
-
-  // First time entering Production starts the lifecycle
-if (nextStage === STAGES.PRODUCTION) {
-  workflowUpdate.last_cycle_start_at = new Date();
-}
-
-
-    
-    if (!container.initial_qa_approved_at) {
-      workflowUpdate.initial_qa_approved_at = new Date();
-    }
   
+if (nextStage === STAGES.PRODUCTION) {
+
+    workflowUpdate.last_cycle_start_at = new Date();
+
+    workflowUpdate.requires_qa_approval = false;
+
+    if (!container.initial_qa_approved_at) {
+        workflowUpdate.initial_qa_approved_at = new Date();
+    }
+}
+ 
 
   await containerModel.updateContainerWorkflow(
     id,

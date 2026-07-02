@@ -77,25 +77,24 @@ async function moveContainer(req,res){
         req.body,
         req.user
     );
+  
 
     res.json(result);
     
+} catch (error) {
+  console.error(error);
 
-  } catch (error) {
-    console.error(error);
-
-    if (error.message === "Container not found") {
-      return res.status(404).json({ message: error.message });
-    }
-
-    res.status(500).json({ message: "Failed to move container." });
-  }
+  res.status(400).json({
+    message: error.message,
+  });
 }
+}
+  
 
 module.exports = {
   getAllContainers,
   getContainerById,
   createContainer,
   updateContainer,
-  moveContainer
+  moveContainer,
 };
