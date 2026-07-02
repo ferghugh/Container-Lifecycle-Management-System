@@ -9,7 +9,7 @@ const stageRules = require("../constants/stageRules");
 async function createApproval(container, previousStage, nextStage, user) {
   const action = stageRules.getApprovalAction(previousStage, nextStage);
 
-  console.log("Creating approval:", action);
+
 
   // Prevent duplicate pending approvals
   const existing = await approvalModel.getPendingApproval(container.id);
@@ -17,21 +17,20 @@ async function createApproval(container, previousStage, nextStage, user) {
   if (existing) {
     throw new Error("A pending approval already exists for this container.");
   }
-console.log("Container flags:", {
-  requires_qa_approval: container.requires_qa_approval,
-  is_damaged: container.is_damaged,
-  requires_swab: container.requires_swab,
-});
   // Determine who must approve this request
+console.log("initial_qa_approved_at =", container.initial_qa_approved_at);
+console.log(
+  "Condition evaluates to:",
+  !!container.initial_qa_approved_at
+);
   const requiredRole =
-    container.requires_qa_approval ||
-    container.is_damaged ||
-    container.requires_swab
-      ? "QA"
-      : "SUPERVISOR";
-
+    container.initial_qa_approved_at
+      ? "Supervisor"
+      : "QA";
+console.log("requiredRole =", requiredRole);
   // Create the approval request
   const approvalId = await approvalModel.createApproval({
+    
     container_id: container.id,
 
     from_stage: previousStage,
@@ -45,8 +44,13 @@ console.log("Container flags:", {
     comments: "Automatically created by workflow.",
 
     requested_by_user_id: user.id,
+    
   });
-
+console.log({
+  containerId: container.id,
+  initialQaApprovedAt: container.initial_qa_approved_at,
+  requiredRole
+});
   return approvalId;
 }
 
@@ -54,11 +58,6 @@ console.log("Container flags:", {
 async function reviewApproval(id, reviewData, user) {
   // Retrieve the approval request
   const approval = await approvalModel.getApprovalById(id);
-  console.log("Approval:", approval);
-  console.log("User:",user)
-  console.log(
-  `Reviewer role: ${user.role}, Required role: ${approval.required_role}`
-);
 
   if (!approval) {
     throw new Error("Approval request not found");
@@ -100,8 +99,6 @@ async function reviewApproval(id, reviewData, user) {
 // Retrieve the latest approval for a movement
 async function getLatestApproval(containerId, previousStage, nextStage) {
   const action = stageRules.getApprovalAction(previousStage, nextStage);
-
-  console.log("Looking for approval:", action);
 
   return await approvalModel.getLatestApproval(containerId, action);
 }
