@@ -10,9 +10,34 @@ async function getAllContainers() {
 }
 
 //retrieve a specific container by its ID from the database
+// Retrieve a specific container by its ID from the database
 async function getContainerById(id) {
-  const [rows] = await db.query("SELECT * FROM containers WHERE id = ?", [id]);
-  return rows[0] || null;
+
+  // Load the container
+  const [containerRows] = await db.query(
+    "SELECT * FROM containers WHERE id = ?",
+    [id]
+  );
+
+  const container = containerRows[0];
+
+  if (!container) {
+    return null;
+  }
+
+  // Load the movement history
+  const [movementRows] = await db.query(
+    `SELECT *
+     FROM container_movements
+     WHERE container_id = ?
+     ORDER BY id`,
+    [id]
+  );
+
+  // Attach movements to the container
+  container.movements = movementRows;
+
+  return container;
 }
 
 //create a new container in the database with the provided details
@@ -28,7 +53,7 @@ async function createContainer(containerData) {
   } = containerData;
 
   const [result] = await db.query(
-    "INSERT INTO containers (container_code, current_status, location_id, is_damaged, requires_qa_approval, requires_swab, last_cycle_start_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO containers (container_code, current_status, location_id, is_damaged, requires_qa_approval, requires_swab, last_cycle_start_at, use_count, initial_qa_approved_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
       container_code,
       current_status,
@@ -37,18 +62,23 @@ async function createContainer(containerData) {
       requires_qa_approval,
       requires_swab,
       last_cycle_start_at,
+      0,
+      null,
     ],
   );
   return result.insertId;
 }
 //update existing container details in the database
+
 async function updateContainerWorkflow(id, workflowData) {
+
   const {
     current_status,
     location_id,
     is_damaged,
     requires_qa_approval,
     requires_swab,
+    use_count,
     last_cycle_start_at,
     initial_qa_approved_at,
   } = workflowData;
@@ -62,6 +92,7 @@ async function updateContainerWorkflow(id, workflowData) {
         requires_qa_approval = ?,
         requires_swab = ?,
         last_cycle_start_at = ?,
+        use_count = ?,
         initial_qa_approved_at = ?
      WHERE id = ?`,
     [
@@ -71,6 +102,7 @@ async function updateContainerWorkflow(id, workflowData) {
       requires_qa_approval,
       requires_swab,
       last_cycle_start_at,
+      use_count,
       initial_qa_approved_at,
       id,
     ],
@@ -98,6 +130,19 @@ async function updateContainer(id, containerData) {
   return result.affectedRows > 0;
 }
 
+async function resetLifecycle(containerId) {
+
+    const [result] = await db.query(
+        `UPDATE containers
+         SET
+            use_count = 0,
+            last_cycle_start_at = NULL
+         WHERE id = ?`,
+        [containerId]
+    );
+
+    return result.affectedRows > 0;
+}
 // Export the functions for use in other parts of the application
 module.exports = {
   getAllContainers,
@@ -106,4 +151,5 @@ module.exports = {
   updateContainerWorkflow,
   getContainerByCode,
   updateContainer,
+  resetLifecycle,
 };
