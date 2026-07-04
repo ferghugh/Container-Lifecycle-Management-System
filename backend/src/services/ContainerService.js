@@ -103,16 +103,7 @@ async function moveContainer(id, movementData, user) {
     }
   }
 
-  // ------------------------------------
-  // RECORD MOVEMENT
-  // ------------------------------------
-  await movementModel.createMovement({
-    container_id: container.id,
-    from_stage: previousStage,
-    to_stage: nextStage,
-    moved_by_user_id: user.id,
-    approved_by_user_id: approval ? approval.reviewed_by_user_id : null,
-  });
+ 
 
   // ------------------------------------
   // UPDATE CONTAINER WORKFLOW
@@ -136,26 +127,92 @@ async function moveContainer(id, movementData, user) {
     workflowUpdate.requires_qa_approval = false;
   }
 
-  // ------------------------------------
-  // PRODUCTION LIFECYCLE + EXPIRY CHECK
-  // ------------------------------------
-  if (nextStage === STAGES.PRODUCTION) {
-    const newUseCount = (container.use_count ?? 0) + 1;
 
-    const timeExpired =
-      container.last_cycle_start_at &&
-      new Date(container.last_cycle_start_at).getTime() + 30 * 24 * 60 * 60 * 1000 <
-        Date.now();
+// PRODUCTION LIFECYCLE + EXPIRY CHECK
+// ------------------------------------
+// PRODUCTION LIFECYCLE + EXPIRY CHECK
+// ------------------------------------
+if (nextStage === STAGES.PRODUCTION) {
 
-    if (newUseCount >= 14 || timeExpired) {
-      throw new Error(
-        "Container lifecycle expired. Must go to CLEANING before supervisor approval."
-      );
-    }
+  const newUseCount = (container.use_count ?? 0) + 1;
 
-    workflowUpdate.use_count = newUseCount;
+  const timeExpired =
+    container.last_cycle_start_at &&
+    (
+      new Date(container.last_cycle_start_at).getTime() +
+      (30 * 24 * 60 * 60 * 1000)
+    ) < Date.now();
+
+  // Update lifecycle values
+  workflowUpdate.use_count = newUseCount;
+
+  // Start the lifecycle timer only once
+  if (!container.last_cycle_start_at) {
     workflowUpdate.last_cycle_start_at = new Date();
   }
+
+  // ------------------------------------
+  // LIFECYCLE EXPIRED
+  // ------------------------------------
+  if (newUseCount > 14 || timeExpired) {
+
+    workflowUpdate.current_status = STAGES.CLEANING;
+    workflowUpdate.location_id = getLocationForStage(STAGES.CLEANING);
+
+    // Leave the completed lifecycle at 14 uses
+    workflowUpdate.use_count = 14;
+
+    await containerModel.updateContainerWorkflow(id, workflowUpdate);
+
+    await movementModel.createMovement({
+      container_id: container.id,
+      from_stage: previousStage,
+      to_stage: STAGES.CLEANING,
+      moved_by_user_id: user.id,
+      approved_by_user_id: null,
+    });
+
+    try {
+
+      await approvalService.createApproval(
+        container,
+        STAGES.PRODUCTION,
+        STAGES.CLEANING,
+        user
+      );
+
+    } catch (err) {
+
+      // Ignore duplicate pending approval
+      if (
+        err.message ===
+        "A pending approval already exists for this container."
+      ) {
+        return {
+          message:
+            "Container is already in CLEANING awaiting Supervisor approval."
+        };
+      }
+
+      throw err;
+    }
+
+    return {
+      message:
+        "Container lifecycle expired. Container moved to CLEANING awaiting Supervisor approval."
+    };
+  }
+}
+ // ------------------------------------
+  // RECORD MOVEMENT
+  // ------------------------------------
+  await movementModel.createMovement({
+    container_id: container.id,
+    from_stage: previousStage,
+    to_stage: nextStage,
+    moved_by_user_id: user.id,
+    approved_by_user_id: approval ? approval.reviewed_by_user_id : null,
+  });
 
   await containerModel.updateContainerWorkflow(id, workflowUpdate);
 

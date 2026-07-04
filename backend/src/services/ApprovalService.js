@@ -3,7 +3,13 @@
 // and retrieving the latest approval.
 
 const approvalModel = require("../models/approvalModel");
+const containerModel = require("../models/containerModel");
+const movementModel = require("../models/movementModel");
+
+const LOCATIONS = require("../constants/locations");
 const stageRules = require("../constants/stageRules");
+const { STAGES } = require("../constants/stageRules");
+
 
 async function createApproval(container, previousStage, nextStage, user) {
   const action = stageRules.getApprovalAction(previousStage, nextStage);
@@ -27,9 +33,8 @@ async function createApproval(container, previousStage, nextStage, user) {
 
   return approvalId;
 }
-
-// Review an approval request
 async function reviewApproval(id, reviewData, user) {
+
   const approval = await approvalModel.getApprovalById(id);
 
   if (!approval) {
@@ -52,18 +57,76 @@ async function reviewApproval(id, reviewData, user) {
     comments: reviewData.comments,
   });
 
-  if (status === "APPROVED") {
+  // ------------------------------------
+  // STOP HERE IF REJECTED
+  // ------------------------------------
+  if (status === "REJECTED") {
+
     return {
-      message: "Approval approved. Container is authorised for movement.",
+      message: "Approval rejected.",
+      approvalId: approval.id,
+    };
+
+  }
+
+  // ------------------------------------
+  // SUPERVISOR RESET AFTER EXPIRY
+  // ------------------------------------
+  if (
+    approval.requested_action === "SupervisorApproval" ||
+    approval.requested_action === "SupervisorExpiryReset"
+  ) {
+
+    try {
+    const container = await containerModel.getContainerById(
+      approval.container_id
+    );
+
+    await containerModel.updateContainerWorkflow(
+      approval.container_id,
+      {
+        current_status: STAGES.CLEAN_STORAGE,
+        location_id: LOCATIONS.CLEAN_STORAGE,
+
+        is_damaged: container.is_damaged,
+        requires_qa_approval: false,
+        requires_swab: container.requires_swab,
+
+        use_count: 0,
+        last_cycle_start_at: null,
+        initial_qa_approved_at: container.initial_qa_approved_at,
+      }
+    );
+
+    await movementModel.createMovement({
+      container_id: approval.container_id,
+      from_stage: STAGES.CLEANING,
+      to_stage: STAGES.CLEAN_STORAGE,
+      moved_by_user_id: user.id,
+      approved_by_user_id: user.id,
+    });
+   } catch (error) {
+      throw new Error("Error resetting container lifecycle: " + error.message);
+      throw error;
+    }
+
+    return {
+      message:
+        "Supervisor approved. Container returned to Clean Storage and lifecycle reset.",
       approvalId: approval.id,
     };
   }
 
+  // ------------------------------------
+  // ALL OTHER APPROVALS
+  // ------------------------------------
   return {
-    message: "Approval rejected.",
+    message: "Approval approved. Container is authorised for movement.",
     approvalId: approval.id,
   };
+
 }
+
 
 // Retrieve the latest approval for a movement
 async function getLatestApproval(containerId, previousStage, nextStage) {
