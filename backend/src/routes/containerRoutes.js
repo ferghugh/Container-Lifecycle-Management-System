@@ -17,7 +17,7 @@ router.get("/:id", authMiddleware, containerController.getContainerById);
 router.post(
   "/",
   authMiddleware,
-  authorizationMiddleware("QA"),
+  authorizationMiddleware("QA","USER"),
   containerController.createContainer
 );
 

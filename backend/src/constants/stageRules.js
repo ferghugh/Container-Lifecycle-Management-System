@@ -21,22 +21,16 @@ function isValidTransition(from, to) {
   return validTransitions[from]?.includes(to) || false;
 }
 
-// Check whether a transition requires approval
 function requiresApproval(from, to) {
 
-  // QA approval BEFORE first production
-  if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
-    return true; // QA approves
-  }
-
-  // QA approval BEFORE leaving QA stage (CLEANING → CLEAN_STORAGE)
+  // Initial QA release after cleaning
   if (from === STAGES.CLEANING && to === STAGES.CLEAN_STORAGE) {
-    return true; // QA approves
+    return true;
   }
 
-  // Supervisor approval AFTER expiry (PRODUCTION → CLEANING)
+  // Supervisor approval after lifecycle expiry
   if (from === STAGES.PRODUCTION && to === STAGES.CLEANING) {
-    return true; // Supervisor approves
+    return true;
   }
 
   return false;
@@ -44,10 +38,6 @@ function requiresApproval(from, to) {
 
 // Return the approval action name
 function getApprovalAction(from, to) {
-
-  if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
-    return "MoveToProduction";
-  }
 
   if (from === STAGES.CLEANING && to === STAGES.CLEAN_STORAGE) {
     return "QAApproval";
@@ -63,10 +53,6 @@ function getApprovalAction(from, to) {
 // Return the role that must approve
 function getApprovalRole(from, to) {
 
-  if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
-    return "QA";
-  }
-
   if (from === STAGES.CLEANING && to === STAGES.CLEAN_STORAGE) {
     return "QA";
   }
@@ -77,7 +63,6 @@ function getApprovalRole(from, to) {
 
   return null;
 }
-
 // Determine whether a container has expired
 function isExpired(container) {
 
