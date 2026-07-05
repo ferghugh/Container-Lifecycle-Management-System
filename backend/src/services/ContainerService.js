@@ -68,7 +68,10 @@ async function moveContainer(id, movementData, user) {
   const container = await containerModel.getContainerById(id);
   if (!container) throw new Error("Container not found");
 
-  const { nextStage } = movementData;
+const {
+  nextStage,
+  bypassApproval = false
+} = movementData;
   if (!nextStage) throw new Error("Next stage is required");
 
   const previousStage = container.current_status;
@@ -86,22 +89,38 @@ async function moveContainer(id, movementData, user) {
   // ------------------------------------
   let approval = null;
 
-  if (stageRules.requiresApproval(previousStage, nextStage)) {
-    approval = await approvalService.getLatestApproval(container.id, previousStage, nextStage);
+  if (
+  !bypassApproval &&
+  stageRules.requiresApproval(previousStage, nextStage)
+) {
 
-    if (!approval) {
-      await approvalService.createApproval(container, previousStage, nextStage, user);
-      return { message: "Approval required. Request created." };
-    }
+  approval = await approvalService.getLatestApproval(
+    container.id,
+    previousStage,
+    nextStage
+  );
 
-    if (approval.status === "PENDING") {
-      throw new Error("Approval is still pending.");
-    }
+  if (!approval) {
+    await approvalService.createApproval(
+      container,
+      previousStage,
+      nextStage,
+      user
+    );
 
-    if (approval.status === "REJECTED") {
-      throw new Error("Approval was rejected.");
-    }
+    return {
+      message: "Approval required. Request created."
+    };
   }
+
+  if (approval.status === "PENDING") {
+    throw new Error("Approval is still pending.");
+  }
+
+  if (approval.status === "REJECTED") {
+    throw new Error("Approval was rejected.");
+  }
+}
 
  
 
