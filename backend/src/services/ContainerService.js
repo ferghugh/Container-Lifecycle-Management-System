@@ -101,7 +101,7 @@ const {
   );
 
   if (!approval) {
-    await approvalService.createApproval(
+   approval = await approvalService.createApproval(
       container,
       previousStage,
       nextStage,
@@ -109,7 +109,8 @@ const {
     );
 
     return {
-      message: "Approval required. Request created."
+      message: "Approval required. Request created.",
+      approval
     };
   }
 

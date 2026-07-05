@@ -31,7 +31,7 @@ async function createApproval(container, previousStage, nextStage, user) {
     requested_by_user_id: user.id,
   });
 
-  return approvalId;
+  return await approvalModel.getApprovalById(approvalId);
 }
 async function reviewApproval(id, reviewData, user) {
 
