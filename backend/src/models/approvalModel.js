@@ -108,6 +108,18 @@ async function getLatestApproval(containerId, requestedAction) {
 
   return rows[0] || null;
 }
+// Retrieve all pending approval requests
+async function getPendingApprovals() {
+
+  const [rows] = await db.query(`
+    SELECT *
+    FROM approval_requests
+    WHERE status = 'PENDING'
+    ORDER BY requested_at ASC
+  `);
+
+  return rows;
+}
 
 module.exports = {
   createApproval,
@@ -115,5 +127,6 @@ module.exports = {
   getApprovalById,
   reviewApproval,
   getLatestApproval,
+  getPendingApprovals
 };
     

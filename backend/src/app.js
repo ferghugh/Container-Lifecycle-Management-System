@@ -23,6 +23,7 @@ const containerRoutes = require("./routes/containerRoutes");
 const processStageRoutes = require("./routes/processStageRoutes");
 const approvalRoutes = require("./routes/approvalRoutes");
 const observationRoutes = require("./routes/observationRoutes");
+const simulationRoutes = require("./routes/simulationRoutes");
 
 // Use the authentication routes for any requests to /api/auth
 app.use("/api/auth", authRoutes);
@@ -30,6 +31,7 @@ app.use("/api/containers", containerRoutes);
 app.use("/api/processstages", processStageRoutes);
 app.use("/api/approvals", approvalRoutes);
 app.use("/api/observations", observationRoutes);
+app.use("/api/simulations", simulationRoutes);
 
 //check route to verify that the server is running
 app.get('/', (req, res) => {

@@ -143,6 +143,23 @@ async function resetLifecycle(containerId) {
 
     return result.affectedRows > 0;
 }
+async function updateProductionUse(id, useCount, lastCycleStartAt) {
+
+  const [result] = await db.query(
+    `UPDATE containers
+     SET
+        use_count = ?,
+        last_cycle_start_at = ?
+     WHERE id = ?`,
+    [
+      useCount,
+      lastCycleStartAt,
+      id,
+    ]
+  );
+
+  return result.affectedRows > 0;
+}
 // Export the functions for use in other parts of the application
 module.exports = {
   getAllContainers,
@@ -152,4 +169,5 @@ module.exports = {
   getContainerByCode,
   updateContainer,
   resetLifecycle,
+  updateProductionUse,  
 };

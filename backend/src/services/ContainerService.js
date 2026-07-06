@@ -148,10 +148,8 @@ const {
   }
 
 
-// PRODUCTION LIFECYCLE + EXPIRY CHECK
-// ------------------------------------
-// PRODUCTION LIFECYCLE + EXPIRY CHECK
-// ------------------------------------
+
+// Production and expired containers have special lifecycle rules
 if (nextStage === STAGES.PRODUCTION) {
 
   const newUseCount = (container.use_count ?? 0) + 1;

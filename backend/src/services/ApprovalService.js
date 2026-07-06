@@ -134,8 +134,13 @@ async function getLatestApproval(containerId, previousStage, nextStage) {
   return await approvalModel.getLatestApproval(containerId, action);
 }
 
+async function getPendingApprovals() {
+  return await approvalModel.getPendingApprovals();
+}
+
 module.exports = {
   createApproval,
   reviewApproval,
   getLatestApproval,
+  getPendingApprovals,
 };
