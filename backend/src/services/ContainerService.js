@@ -89,9 +89,11 @@ const {
   // ------------------------------------
   let approval = null;
 
+
   if (
   !bypassApproval &&
   stageRules.requiresApproval(previousStage, nextStage)
+  
 ) {
 
   approval = await approvalService.getLatestApproval(
@@ -100,7 +102,11 @@ const {
     nextStage
   );
 
+
   if (!approval) {
+
+   
+
    approval = await approvalService.createApproval(
       container,
       previousStage,
@@ -113,6 +119,8 @@ const {
       approval
     };
   }
+
+
 
   if (approval.status === "PENDING") {
     throw new Error("Approval is still pending.");
@@ -142,16 +150,17 @@ const {
   // ------------------------------------
   // FIRST-TIME QA APPROVAL LIFECYCLE UPDATE
   // ------------------------------------
-  if (nextStage === STAGES.CLEAN_STORAGE && container.requires_qa_approval) {
-    workflowUpdate.initial_qa_approved_at = new Date();
-    workflowUpdate.requires_qa_approval = false;
-  }
 
 
 
 // Production and expired containers have special lifecycle rules
 if (nextStage === STAGES.PRODUCTION) {
-
+// First production entry completes the initial QA requirement
+if (container.requires_qa_approval) {
+    workflowUpdate.requires_qa_approval = false;
+    workflowUpdate.initial_qa_approved_at = new Date();
+}
+ 
   const newUseCount = (container.use_count ?? 0) + 1;
 
   const timeExpired =

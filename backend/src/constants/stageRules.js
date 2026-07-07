@@ -22,9 +22,8 @@ function isValidTransition(from, to) {
 }
 
 function requiresApproval(from, to) {
-
-  // Initial QA release after cleaning
-  if (from === STAGES.CLEANING && to === STAGES.CLEAN_STORAGE) {
+// Initial QA approval before first Production entry
+  if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
     return true;
   }
 
@@ -36,10 +35,9 @@ function requiresApproval(from, to) {
   return false;
 }
 
-// Return the approval action name
 function getApprovalAction(from, to) {
 
-  if (from === STAGES.CLEANING && to === STAGES.CLEAN_STORAGE) {
+  if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
     return "QAApproval";
   }
 
@@ -50,10 +48,9 @@ function getApprovalAction(from, to) {
   return `MoveToStage${to}`;
 }
 
-// Return the role that must approve
 function getApprovalRole(from, to) {
 
-  if (from === STAGES.CLEANING && to === STAGES.CLEAN_STORAGE) {
+  if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
     return "QA";
   }
 
@@ -63,7 +60,7 @@ function getApprovalRole(from, to) {
 
   return null;
 }
-// Determine whether a container has expired
+ 
 function isExpired(container) {
 
   // Rule 1: Expired after 14 production uses
