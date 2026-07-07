@@ -1,6 +1,6 @@
 // src/controllers/simulationController.js
 
-const simulationService = require("../services/SimulationService");
+const simulationService = require("../services/simulationService");
 
 async function runSimulation(req, res) {
 

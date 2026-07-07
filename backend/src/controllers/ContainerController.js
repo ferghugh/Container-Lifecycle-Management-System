@@ -1,6 +1,6 @@
 // src/controllers/ContainerController.js
 
-const containerService = require("../services/ContainerService");
+const containerService = require("../services/containerService");
 
 // Retrieve all containers
 async function getAllContainers(req, res) {

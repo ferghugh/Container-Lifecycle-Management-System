@@ -1,7 +1,7 @@
 // src/services/observationService.js
 
 const observationModel = require("../models/observationModel");
-const containerService = require("./ContainerService");
+const containerService = require("./containerService");
 const { STAGES } = require("../constants/stageRules");
 
 // ------------------------------------

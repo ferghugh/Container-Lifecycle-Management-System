@@ -5,7 +5,7 @@ const LOCATIONS = require("../constants/locations");
 const { STAGES } = require("../constants/stageRules");
 const stageRules = require("../constants/stageRules");
 const movementModel = require("../models/movementModel");
-const approvalService = require("../services/approvalService");
+const approvalService = require("./approvalService");
 
 // ------------------------------------
 // GET ALL CONTAINERS
