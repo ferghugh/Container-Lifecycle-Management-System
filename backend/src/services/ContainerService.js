@@ -68,10 +68,7 @@ async function moveContainer(id, movementData, user) {
   const container = await containerModel.getContainerById(id);
   if (!container) throw new Error("Container not found");
 
-const {
-  nextStage,
-  bypassApproval = false
-} = movementData;
+  const { nextStage, bypassApproval = false } = movementData;
   if (!nextStage) throw new Error("Next stage is required");
 
   const previousStage = container.current_status;
@@ -81,7 +78,9 @@ const {
   }
 
   if (!stageRules.isValidTransition(previousStage, nextStage)) {
-    throw new Error(`Invalid stage transition from ${previousStage} to ${nextStage}`);
+    throw new Error(
+      `Invalid stage transition from ${previousStage} to ${nextStage}`,
+    );
   }
 
   // ------------------------------------
@@ -89,49 +88,38 @@ const {
   // ------------------------------------
   let approval = null;
 
-
   if (
-  !bypassApproval &&
-  stageRules.requiresApproval(previousStage, nextStage)
-  
-) {
-
-  approval = await approvalService.getLatestApproval(
-    container.id,
-    previousStage,
-    nextStage
-  );
-
-
-  if (!approval) {
-
-   
-
-   approval = await approvalService.createApproval(
-      container,
+    !bypassApproval &&
+    stageRules.requiresApproval(previousStage, nextStage)
+  ) {
+    approval = await approvalService.getLatestApproval(
+      container.id,
       previousStage,
       nextStage,
-      user
     );
 
-    return {
-      message: "Approval required. Request created.",
-      approval
-    };
+    if (!approval) {
+      approval = await approvalService.createApproval(
+        container,
+        previousStage,
+        nextStage,
+        user,
+      );
+
+      return {
+        message: "Approval required. Request created.",
+        approval,
+      };
+    }
+
+    if (approval.status === "PENDING") {
+      throw new Error("Approval is still pending.");
+    }
+
+    if (approval.status === "REJECTED") {
+      throw new Error("Approval was rejected.");
+    }
   }
-
-
-
-  if (approval.status === "PENDING") {
-    throw new Error("Approval is still pending.");
-  }
-
-  if (approval.status === "REJECTED") {
-    throw new Error("Approval was rejected.");
-  }
-}
-
- 
 
   // ------------------------------------
   // UPDATE CONTAINER WORKFLOW
@@ -151,86 +139,95 @@ const {
   // FIRST-TIME QA APPROVAL LIFECYCLE UPDATE
   // ------------------------------------
 
-
-
-// Production and expired containers have special lifecycle rules
-if (nextStage === STAGES.PRODUCTION) {
-// First production entry completes the initial QA requirement
-if (container.requires_qa_approval) {
-    workflowUpdate.requires_qa_approval = false;
-    workflowUpdate.initial_qa_approved_at = new Date();
-}
- 
-  const newUseCount = (container.use_count ?? 0) + 1;
-
-  const timeExpired =
-    container.last_cycle_start_at &&
-    (
-      new Date(container.last_cycle_start_at).getTime() +
-      (30 * 24 * 60 * 60 * 1000)
-    ) < Date.now();
-
-  // Update lifecycle values
-  workflowUpdate.use_count = newUseCount;
-
-  // Start the lifecycle timer only once
-  if (!container.last_cycle_start_at) {
-    workflowUpdate.last_cycle_start_at = new Date();
-  }
-
-  // ------------------------------------
-  // LIFECYCLE EXPIRED
-  // ------------------------------------
-  if (newUseCount > 14 || timeExpired) {
-
-    workflowUpdate.current_status = STAGES.CLEANING;
-    workflowUpdate.location_id = getLocationForStage(STAGES.CLEANING);
-
-    // Leave the completed lifecycle at 14 uses
-    workflowUpdate.use_count = 14;
-
-    await containerModel.updateContainerWorkflow(id, workflowUpdate);
-
-    await movementModel.createMovement({
-      container_id: container.id,
-      from_stage: previousStage,
-      to_stage: STAGES.CLEANING,
-      moved_by_user_id: user.id,
-      approved_by_user_id: null,
-    });
-
-    try {
-
-      await approvalService.createApproval(
-        container,
-        STAGES.PRODUCTION,
-        STAGES.CLEANING,
-        user
-      );
-
-    } catch (err) {
-
-      // Ignore duplicate pending approval
-      if (
-        err.message ===
-        "A pending approval already exists for this container."
-      ) {
-        return {
-          message:
-            "Container is already in CLEANING awaiting Supervisor approval."
-        };
-      }
-
-      throw err;
+  // Production and expired containers have special lifecycle rules
+  if (nextStage === STAGES.PRODUCTION) {
+    // First production entry completes the initial QA requirement
+    if (container.requires_qa_approval) {
+      workflowUpdate.requires_qa_approval = false;
+      workflowUpdate.initial_qa_approved_at = new Date();
     }
 
-    return {
-      message:
-        "Container lifecycle expired. Container moved to CLEANING awaiting Supervisor approval."
-    };
+    const newUseCount = (container.use_count ?? 0) + 1;
+
+    let timeExpired = false;
+
+    if (container.last_cycle_start_at) {
+      const expiryDate = new Date(container.last_cycle_start_at);
+
+      // Valid for the whole of the 30th day
+      expiryDate.setDate(expiryDate.getDate() + 31);
+
+      // Expires at midnight
+      expiryDate.setHours(0, 0, 0, 0);
+
+      timeExpired = new Date() >= expiryDate;
+    }
+
+    // Update lifecycle values
+    workflowUpdate.use_count = newUseCount;
+
+    // Start the lifecycle timer only once
+    if (!container.last_cycle_start_at) {
+      workflowUpdate.last_cycle_start_at = new Date();
+    }
+
+    // ------------------------------------
+    // LIFECYCLE EXPIRED
+    // ------------------------------------
+    if (newUseCount > 14 || timeExpired) {
+      workflowUpdate.current_status = STAGES.CLEANING;
+      workflowUpdate.location_id = getLocationForStage(STAGES.CLEANING);
+
+      // Preserve the lifecycle usage count.
+      //
+      // If the container expires because it exceeded 14 production uses,
+      // record the completed lifecycle at 14 uses.
+      //
+      // If the container expires because the 30-day limit was reached,
+      // preserve the actual number of production uses completed.
+      workflowUpdate.use_count = newUseCount > 14 ? 14 : container.use_count;
+
+      workflowUpdate.use_count = newUseCount > 14 ? 14 : container.use_count;
+
+      await containerModel.updateContainerWorkflow(id, workflowUpdate);
+
+      await movementModel.createMovement({
+        container_id: container.id,
+        from_stage: previousStage,
+        to_stage: STAGES.CLEANING,
+        moved_by_user_id: user.id,
+        approved_by_user_id: null,
+      });
+
+      try {
+        await approvalService.createApproval(
+          container,
+          STAGES.PRODUCTION,
+          STAGES.CLEANING,
+          user,
+        );
+      } catch (err) {
+        // Ignore duplicate pending approval
+        if (
+          err.message ===
+          "A pending approval already exists for this container."
+        ) {
+          return {
+            message:
+              "Container is already in CLEANING awaiting Supervisor approval.",
+          };
+        }
+
+        throw err;
+      }
+
+      return {
+        message:
+          "Container lifecycle expired. Container moved to CLEANING awaiting Supervisor approval.",
+      };
+    }
   }
-}
- // ------------------------------------
+  // ------------------------------------
   // RECORD MOVEMENT
   // ------------------------------------
   await movementModel.createMovement({

@@ -27,11 +27,6 @@ function requiresApproval(from, to) {
     return true;
   }
 
-  // Supervisor approval after lifecycle expiry
-  if (from === STAGES.PRODUCTION && to === STAGES.CLEANING) {
-    return true;
-  }
-
   return false;
 }
 

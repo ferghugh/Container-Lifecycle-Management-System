@@ -21,14 +21,20 @@ async function getContainerById(req, res) {
     const container = await containerService.getContainerById(id);
 
     res.status(200).json(container);
+
   } catch (error) {
-    console.error(error);
 
     if (error.message === "Container not found") {
-      return res.status(404).json({ message: error.message });
+      return res.status(404).json({
+        message: error.message,
+      });
     }
 
-    res.status(500).json({ message: "Failed to retrieve container." });
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to retrieve container.",
+    });
   }
 }
 
@@ -42,54 +48,78 @@ async function createContainer(req, res) {
       id: containerId,
     });
   } catch (error) {
+    if (
+      error.message === "Container code is required" ||
+      error.message === "Container code already exists"
+    ) {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
     console.error(error);
-    res.status(500).json({ message: "Failed to create container." });
+
+    res.status(500).json({
+      message: "Failed to create container.",
+    });
   }
 }
 
-// Update an existing container
+//update an existing container
 async function updateContainer(req, res) {
   try {
     const { id } = req.params;
 
     await containerService.updateContainer(id, req.body);
 
-    res.json({
+    res.status(200).json({
       message: "Container updated successfully.",
     });
   } catch (error) {
-    console.error(error);
-
     if (error.message === "Container not found") {
-      return res.status(404).json({ message: error.message });
+      return res.status(404).json({
+        message: error.message,
+      });
     }
-
+    console.error(error);
     res.status(500).json({ message: "Failed to update container." });
   }
 }
 
-//move container through the lifecycle stages and update its location
-async function moveContainer(req,res){
-  try{
 
+//move container through the lifecycle stages and update its location
+async function moveContainer(req, res) {
+  try {
     const result = await containerService.moveContainer(
-        req.params.id,
-        req.body,
-        req.user
+      req.params.id,
+      req.body,
+      req.user,
     );
-  
 
     res.json(result);
-    
-} catch (error) {
-  console.error(error);
 
-  res.status(400).json({
-    message: error.message,
-  });
+  } catch (error) {
+
+    // Expected business rule / validation errors
+    if (
+      error.message.includes("Invalid stage transition") ||
+      error.message.includes("Approval") ||
+      error.message.includes("nextStage") ||
+      error.message.includes("Container not found")
+    ) {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to move container.",
+    });
+  }
 }
-}
-  
+
 
 module.exports = {
   getAllContainers,

@@ -6,8 +6,6 @@ require('dotenv').config();
 // Import the Express application
 const app = require('./app');
 
-//import the database connection pool
-const pool = require('./config/database');
 
 const PORT = process.env.PORT || 3000;
 
