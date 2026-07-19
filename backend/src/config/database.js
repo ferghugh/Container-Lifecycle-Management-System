@@ -20,20 +20,7 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-//test the connection to the database
-async function connectDatabase() {
-    try{
-        const connection = await pool.getConnection();
-        console.log("Connected to mySQL database");
-        
 
-        connection.release();
-    } catch (error) {
-        console.error("Database connection failed");
-        console.error(error.message);
-    }
-}
-connectDatabase();
 
 // Export the connection pool for use in other parts of the application
 module.exports = pool;
