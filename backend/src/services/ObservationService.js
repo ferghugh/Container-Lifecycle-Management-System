@@ -47,7 +47,11 @@ async function getAllObservations(status) {
 // ------------------------------------
 async function resolveObservation(id, user) {
 
-  await observationModel.resolveObservation(id, user.id);
+  const resolved = await observationModel.resolveObservation(id, user.id);
+
+  if (!resolved) {
+    throw new Error("Observation not found or already resolved.");
+  }
 
   return {
     message: "Observation resolved."

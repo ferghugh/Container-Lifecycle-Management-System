@@ -789,6 +789,230 @@ console.log({
   expect(containerResponse.body.current_status).toBe(2);
   expect(containerResponse.body.use_count).toBe(1);
 });
+
   });
-  
+  describe("Observation API", () => {
+
+  test("should create a normal observation", async () => {
+
+    const containerId = await createTestContainer(operatorToken);
+
+    const response = await request(app)
+      .post("/api/observations")
+      .set("Authorization", `Bearer ${operatorToken}`)
+      .send({
+        container_id: containerId,
+        description: "Minor cosmetic scratch",
+        is_breach: false
+      });
+
+    expect(response.statusCode).toBe(201);
+
+    // Verify the container has NOT moved
+    const containerResponse = await request(app)
+      .get(`/api/containers/${containerId}`)
+      .set("Authorization", `Bearer ${operatorToken}`);
+
+    expect(containerResponse.statusCode).toBe(200);
+    expect(containerResponse.body.current_status).toBe(1); // RECEIVED
+  });
+test("should create a breach observation and move the container to CLEANING", async () => {
+
+  // -----------------------------
+  // CREATE CONTAINER
+  // -----------------------------
+
+  const containerId = await createTestContainer(operatorToken);
+
+  // Move to CLEANING
+  await request(app)
+    .post(`/api/containers/${containerId}/move`)
+    .set("Authorization", `Bearer ${operatorToken}`)
+    .send({ nextStage: 2 });
+
+  // Move to CLEAN_STORAGE
+  await request(app)
+    .post(`/api/containers/${containerId}/move`)
+    .set("Authorization", `Bearer ${operatorToken}`)
+    .send({ nextStage: 3 });
+
+  // First Production entry
+  let response = await firstProductionEntry(
+    containerId,
+    operatorToken,
+    qaToken,
+    supervisorToken
+  );
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body.container.current_status).toBe(4);
+
+  // -----------------------------
+  // CREATE BREACH OBSERVATION
+  // -----------------------------
+
+  response = await request(app)
+    .post("/api/observations")
+    .set("Authorization", `Bearer ${operatorToken}`)
+    .send({
+      container_id: containerId,
+      description: "Container wall cracked during production",
+      is_breach: true
+    });
+
+  expect(response.statusCode).toBe(201);
+
+  // -----------------------------
+  // VERIFY CONTAINER MOVED
+  // -----------------------------
+
+  const containerResponse = await request(app)
+    .get(`/api/containers/${containerId}`)
+    .set("Authorization", `Bearer ${operatorToken}`);
+
+  expect(containerResponse.statusCode).toBe(200);
+  expect(containerResponse.body.current_status).toBe(2); // CLEANING
+});
+test("should reject unauthenticated observation creation", async () => {
+
+  const containerId = await createTestContainer(operatorToken);
+
+  const response = await request(app)
+    .post("/api/observations")
+    .send({
+      container_id: containerId,
+      description: "Unauthenticated observation",
+      is_breach: false
+    });
+
+  expect(response.statusCode).toBe(401);
+});
+test("should retrieve all observations", async () => {
+
+  const containerId = await createTestContainer(operatorToken);
+
+  // Create an observation
+  await request(app)
+    .post("/api/observations")
+    .set("Authorization", `Bearer ${operatorToken}`)
+    .send({
+      container_id: containerId,
+      description: "Observation retrieval test",
+      is_breach: false
+    });
+
+  // Retrieve observations
+  const response = await request(app)
+    .get("/api/observations")
+    .set("Authorization", `Bearer ${operatorToken}`);
+
+  expect(response.statusCode).toBe(200);
+  expect(Array.isArray(response.body)).toBe(true);
+
+  const observation = response.body.find(
+    o =>
+      o.container_id === containerId &&
+      o.description === "Observation retrieval test"
+  );
+
+  expect(observation).toBeDefined();
+});
+test("QA should resolve an observation", async () => {
+
+  const containerId = await createTestContainer(operatorToken);
+
+  // -----------------------------
+  // CREATE OBSERVATION
+  // -----------------------------
+
+  await request(app)
+    .post("/api/observations")
+    .set("Authorization", `Bearer ${operatorToken}`)
+    .send({
+      container_id: containerId,
+      description: "Observation to resolve",
+      is_breach: false
+    });
+
+  // -----------------------------
+  // GET OBSERVATIONS
+  // -----------------------------
+
+  let response = await request(app)
+    .get("/api/observations")
+    .set("Authorization", `Bearer ${operatorToken}`);
+
+  expect(response.statusCode).toBe(200);
+
+  const observation = response.body.find(
+    o =>
+      o.container_id === containerId &&
+      o.description === "Observation to resolve"
+  );
+
+  expect(observation).toBeDefined();
+
+  // -----------------------------
+  // QA RESOLVES OBSERVATION
+  // -----------------------------
+
+  response = await request(app)
+    .put(`/api/observations/${observation.id}/resolve`)
+    .set("Authorization", `Bearer ${qaToken}`);
+
+  expect(response.statusCode).toBe(200);
+});
+test("Supervisor should not be able to resolve an observation", async () => {
+
+  const containerId = await createTestContainer(operatorToken);
+
+  // -----------------------------
+  // CREATE OBSERVATION
+  // -----------------------------
+
+  await request(app)
+    .post("/api/observations")
+    .set("Authorization", `Bearer ${operatorToken}`)
+    .send({
+      container_id: containerId,
+      description: "Authorization test",
+      is_breach: false
+    });
+
+  // -----------------------------
+  // GET OBSERVATION
+  // -----------------------------
+
+  let response = await request(app)
+    .get("/api/observations")
+    .set("Authorization", `Bearer ${operatorToken}`);
+
+  const observation = response.body.find(
+    o =>
+      o.container_id === containerId &&
+      o.description === "Authorization test"
+  );
+
+  expect(observation).toBeDefined();
+
+  // -----------------------------
+  // SUPERVISOR ATTEMPTS RESOLUTION
+  // -----------------------------
+
+  response = await request(app)
+    .put(`/api/observations/${observation.id}/resolve`)
+    .set("Authorization", `Bearer ${supervisorToken}`);
+
+  expect(response.statusCode).toBe(403);
+});
+test("should return an error when resolving a non-existent observation", async () => {
+
+  const response = await request(app)
+    .put("/api/observations/999999/resolve")
+    .set("Authorization", `Bearer ${qaToken}`);
+
+  expect([400, 404]).toContain(response.statusCode);
+});
+});
+
 });

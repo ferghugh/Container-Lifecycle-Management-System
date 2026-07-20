@@ -33,8 +33,7 @@ async function getAllObservations(req, res) {
 
   try {
 
-    const observations =
-      await observationService.getAllObservations(req.query.status);
+    const observations =  await observationService.getAllObservations(req.params.id,  req.user);
 
     res.json(observations);
 
