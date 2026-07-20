@@ -1,54 +1,34 @@
 const request = require("supertest");
 const app = require("../../app");
 
+// Generic login helper
+async function login(username, password = "password123") {
+  const response = await request(app)
+    .post("/api/auth/login")
+    .send({ username, password });
+
+  if (response.status !== 200) {
+    throw new Error(`Unable to authenticate user: ${username}`);
+  }
+
+  return response.body.token;
+}
+
+// Role-specific helpers
 async function getOperatorToken() {
-    const response = await request(app)
-        .post("/api/auth/login")
-        .send({
-            username: "operator1",
-            password: "password123"
-        });
-
-    if (response.status !== 200) {
-        throw new Error("Unable to authenticate operator.");
-    }
-
-    return response.body.token;
+  return login("operator1");
 }
 
 async function getQAToken() {
-    const response = await request(app)
-        .post("/api/auth/login")
-        .send({
-            username: "qa_user",
-            password: "password123"   // assuming this is the QA user's password
-        });
-
-    if (response.status !== 200) {
-        throw new Error("Unable to authenticate QA user.");
-    }
-
-    return response.body.token;
+  return login("qa_user");
 }
 
-//supervisor token can be added here 
 async function getSupervisorToken() {
-    const response = await request(app)
-        .post("/api/auth/login")
-        .send({
-            username: "supervisor1",
-            password: "password123"   // assuming this is the supervisor's password
-        });
-
-    if (response.status !== 200) {
-        throw new Error("Unable to authenticate supervisor.");
-    }       
-
-    return response.body.token;
+  return login("supervisor1");
 }
 
 module.exports = {
-    getOperatorToken,
-    getQAToken,
-    getSupervisorToken,
+  getOperatorToken,
+  getQAToken,
+  getSupervisorToken,
 };
