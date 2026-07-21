@@ -1,9 +1,14 @@
+import MainLayout from "../layouts/MainLayout";
+
 function Dashboard() {
     return (
-        <div>
-            <h2>Container Management Dashboard</h2>
-            <p>Welcome to the system.</p>
-        </div>
+        <MainLayout>
+
+            <h2>Dashboard</h2>
+
+            <p>Dashboard summary cards will go here.</p>
+
+        </MainLayout>
     );
 }
 

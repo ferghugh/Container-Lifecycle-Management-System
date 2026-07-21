@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 import Dashboard from "./pages/Dashboard";
 import Containers from "./pages/Containers";
 import Approvals from "./pages/Approvals";
@@ -14,6 +15,8 @@ function App() {
 
                 <Route path="/" element={<Login />} />
 
+                 <Route path="/logout" element={<Logout />} />
+                 
                 <Route path="/dashboard" element={<Dashboard />} />
 
                 <Route path="/containers" element={<Containers />} />
