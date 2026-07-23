@@ -59,11 +59,13 @@ async function updateContainer(id, containerData) {
   };
 
   return await containerModel.updateContainer(id, updateData);
+ 
 }
 
 // ------------------------------------
 // MOVE CONTAINER THROUGH LIFECYCLE
 // ------------------------------------
+
 async function moveContainer(id, movementData, user) {
   const container = await containerModel.getContainerById(id);
   if (!container) throw new Error("Container not found");
@@ -72,7 +74,7 @@ async function moveContainer(id, movementData, user) {
   if (!nextStage) throw new Error("Next stage is required");
 
   const previousStage = container.current_status;
-
+   
   if (previousStage === nextStage) {
     throw new Error("Container is already in this stage.");
   }
@@ -141,6 +143,7 @@ async function moveContainer(id, movementData, user) {
 
   // Production and expired containers have special lifecycle rules
   if (nextStage === STAGES.PRODUCTION) {
+   
     // First production entry completes the initial QA requirement
     if (container.requires_qa_approval) {
       workflowUpdate.requires_qa_approval = false;
@@ -175,6 +178,8 @@ async function moveContainer(id, movementData, user) {
     // LIFECYCLE EXPIRED
     // ------------------------------------
     if (newUseCount > 14 || timeExpired) {
+
+
       workflowUpdate.current_status = STAGES.CLEANING;
       workflowUpdate.location_id = getLocationForStage(STAGES.CLEANING);
 
@@ -186,9 +191,6 @@ async function moveContainer(id, movementData, user) {
       // If the container expires because the 30-day limit was reached,
       // preserve the actual number of production uses completed.
       workflowUpdate.use_count = newUseCount > 14 ? 14 : container.use_count;
-
-      workflowUpdate.use_count = newUseCount > 14 ? 14 : container.use_count;
-
       await containerModel.updateContainerWorkflow(id, workflowUpdate);
 
       await movementModel.createMovement({
@@ -241,6 +243,8 @@ async function moveContainer(id, movementData, user) {
   await containerModel.updateContainerWorkflow(id, workflowUpdate);
 
   const updatedContainer = await containerModel.getContainerById(id);
+
+
 
   return {
     message: `Container moved from stage ${previousStage} to ${nextStage}.`,

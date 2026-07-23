@@ -6,19 +6,29 @@ import {
   Divider,
   Button,
   Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getContainerById } from "../services/containerService";
+import { getContainerById, moveContainer } from "../services/containerService";
 import STATUS from "../constants/status";
 import LOCATIONS from "../constants/locations";
+import TRANSITIONS from "../constants/transitions";
 import { useNavigate } from "react-router-dom";
 
 const ContainerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [container, setContainer] = useState(null);
-
+  const [openDialog, setOpenDialog] = useState(false);
+  const [nextStage, setNextStage] = useState("");
   const loadContainer = async () => {
     try {
       const data = await getContainerById(id);
@@ -48,6 +58,23 @@ const ContainerDetails = () => {
       year: "numeric",
     });
   };
+
+  const handleMove = async () => {
+    try {
+      await moveContainer(container.id, {
+        nextStage,
+      });
+
+      setOpenDialog(false);
+      setNextStage("");
+
+      await loadContainer();
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || "Failed to move container.");
+    }
+  };
+ 
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" sx={{ fontWeight: 600 }}>
@@ -163,10 +190,13 @@ const ContainerDetails = () => {
             justifyContent: "space-between",
           }}
         >
-          <Button variant="contained" size="large">
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => setOpenDialog(true)}
+          >
             Move Container
           </Button>
-
           <Button
             variant="outlined"
             size="large"
@@ -176,6 +206,44 @@ const ContainerDetails = () => {
           </Button>
         </Box>
       </Paper>
+
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Move Container</DialogTitle>
+
+        <DialogContent>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Next Stage</InputLabel>
+
+            <Select
+              value={nextStage}
+              label="Next Stage"
+              onChange={(e) => setNextStage(e.target.value)}
+            >
+              {TRANSITIONS[container.current_status].map((stageId) => (
+                <MenuItem key={stageId} value={stageId}>
+                  {LOCATIONS[stageId]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            onClick={handleMove}
+            disabled={!nextStage}
+          >
+            Move
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

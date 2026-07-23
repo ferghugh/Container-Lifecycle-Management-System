@@ -12,7 +12,7 @@ const approvalController = require("../controllers/approvalController");
 router.get(
   "/",
   authMiddleware,
-  authorizationMiddleware("QA"),
+  authorizationMiddleware("QA","SUPERVISOR"),
   approvalController.getPendingApprovals
 );
 

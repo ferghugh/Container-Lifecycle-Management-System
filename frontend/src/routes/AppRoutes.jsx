@@ -9,6 +9,7 @@ import Reports from "../pages/Reports";
 import ContainerDetails from "../pages/ContainerDetails";
 import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
+import ApprovalsPage from "../pages/Approvals";
 
 const AppRoutes = () => {
   return (
@@ -21,7 +22,6 @@ const AppRoutes = () => {
         <Route path="/logout" element={<Logout />} />
 
         <Route element={<ProtectedRoute />}>
-
           <Route element={<MainLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
 
@@ -34,6 +34,8 @@ const AppRoutes = () => {
             <Route path="/reports" element={<Reports />} />
 
             <Route path="/containers/:id" element={<ContainerDetails />} />
+
+            <Route path="/approvals" element={<Approvals />} />
           </Route>
         </Route>
       </Routes>
