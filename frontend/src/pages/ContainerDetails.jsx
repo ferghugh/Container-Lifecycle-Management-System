@@ -147,20 +147,6 @@ const handleMove = async () => {
           </Grid>
 
           <Grid size={{ xs: 6 }}>
-            <Typography fontWeight="bold">Swab Required</Typography>
-          </Grid>
-          <Grid size={{ xs: 6 }}>
-            <Typography>{container.requires_swab ? "Yes" : "No"}</Typography>
-          </Grid>
-
-          <Grid size={{ xs: 6 }}>
-            <Typography fontWeight="bold">Damaged</Typography>
-          </Grid>
-          <Grid size={{ xs: 6 }}>
-            <Typography>{container.is_damaged ? "Yes" : "No"}</Typography>
-          </Grid>
-
-          <Grid size={{ xs: 6 }}>
             <Typography fontWeight="bold">Cycle Started</Typography>
           </Grid>
           <Grid size={{ xs: 6 }}>

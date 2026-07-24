@@ -30,7 +30,7 @@ function Sidebar() {
                 </ListItemButton>
 
                 <ListItemButton onClick={() => navigate("/reports")}>
-                    <ListItemText primary="Reports" />
+                    <ListItemText primary="Analytics" />
                 </ListItemButton>
 
             </List>

@@ -38,9 +38,7 @@ async function createContainer(containerData) {
 
   containerData.current_status = STAGES.RECEIVED;
   containerData.location_id = LOCATIONS.RECEIVING;
-  containerData.is_damaged = false;
   containerData.requires_qa_approval = true;
-  containerData.requires_swab = false;
   containerData.last_cycle_start_at = null;
   containerData.initial_qa_approved_at = null;
 
@@ -130,9 +128,7 @@ async function moveContainer(id, movementData, user) {
   const workflowUpdate = {
     current_status: nextStage,
     location_id: getLocationForStage(nextStage),
-    is_damaged: container.is_damaged,
     requires_qa_approval: container.requires_qa_approval,
-    requires_swab: container.requires_swab,
     last_cycle_start_at: container.last_cycle_start_at,
     use_count: container.use_count,
     initial_qa_approved_at: container.initial_qa_approved_at,
