@@ -58,23 +58,25 @@ const ContainerDetails = () => {
       year: "numeric",
     });
   };
+const handleMove = async () => {
+  try {
 
-  const handleMove = async () => {
-    try {
-      await moveContainer(container.id, {
-        nextStage,
-      });
+    const response = await moveContainer(container.id, {
+      nextStage,
+    });
+     
+     alert(response.message);
 
-      setOpenDialog(false);
-      setNextStage("");
+    setOpenDialog(false);
+    setNextStage("");
 
-      await loadContainer();
-    } catch (error) {
-      console.error(error);
-      alert(error.response?.data?.message || "Failed to move container.");
-    }
-  };
- 
+    await loadContainer();
+
+  } catch (error) {
+    console.error(error);
+    alert(error.response?.data?.message || "Failed to move container.");
+  }
+};
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" sx={{ fontWeight: 600 }}>

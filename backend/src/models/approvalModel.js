@@ -112,10 +112,14 @@ async function getLatestApproval(containerId, requestedAction) {
 async function getPendingApprovals() {
 
   const [rows] = await db.query(`
-    SELECT *
-    FROM approval_requests
-    WHERE status = 'PENDING'
-    ORDER BY requested_at ASC
+    SELECT
+      ar.*,
+      c.container_code
+    FROM approval_requests ar
+    INNER JOIN containers c
+      ON ar.container_id = c.id
+    WHERE ar.status = 'PENDING'
+    ORDER BY ar.requested_at ASC
   `);
 
   return rows;

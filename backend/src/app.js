@@ -22,7 +22,6 @@ const authRoutes = require("./routes/authRoutes");
 const containerRoutes = require("./routes/containerRoutes");
 const processStageRoutes = require("./routes/processStageRoutes");
 const approvalRoutes = require("./routes/approvalRoutes");
-const observationRoutes = require("./routes/observationRoutes");
 const simulationRoutes = require("./routes/simulationRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
@@ -31,7 +30,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/containers", containerRoutes);
 app.use("/api/processstages", processStageRoutes);
 app.use("/api/approvals", approvalRoutes);
-app.use("/api/observations", observationRoutes);
 app.use("/api/simulations", simulationRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 

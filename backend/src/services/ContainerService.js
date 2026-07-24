@@ -123,6 +123,7 @@ async function moveContainer(id, movementData, user) {
     }
   }
 
+
   // ------------------------------------
   // UPDATE CONTAINER WORKFLOW
   // ------------------------------------

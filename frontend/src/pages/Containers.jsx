@@ -1,7 +1,17 @@
-import { Box, Typography, Paper, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { getContainers } from "../services/containerService";
+import { getContainers,createContainer } from "../services/containerService";
 import STATUS from "../constants/status";
 import LOCATIONS from "../constants/locations";
 import { useNavigate } from "react-router-dom";
@@ -12,11 +22,18 @@ const Containers = () => {
  const navigate = useNavigate();
   const [containers, setContainers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [containerCode, setContainerCode] = useState("");
+  const [createError, setCreateError] = useState("");
+
   
   const loadContainers = async () => {
     try {
       const data = await getContainers();
 
+      console.log("Containers:", data);
+      
       const formattedData = data.map((container) => ({
         ...container,
         current_status: STATUS[container.current_status] || "Unknown",
@@ -30,6 +47,29 @@ const Containers = () => {
       console.error("Failed to load containers:", error);
     }
   };
+  const handleCloseDialog = () => {
+  setOpenDialog(false);
+  setContainerCode("");
+  setCreateError("");
+};
+const handleCreateContainer = async () => {
+  try {
+    setCreateError("");
+
+    await createContainer({
+      container_code: containerCode.trim(),
+    });
+
+    await loadContainers();
+
+    handleCloseDialog();
+  } catch (err) {
+    setCreateError(
+      err.response?.data?.message || "Failed to create container."
+    );
+  }
+};
+  
 
   useEffect(() => {
     loadContainers();
@@ -79,15 +119,28 @@ const Containers = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography
-        variant="h4"
-        sx={{
-          mb: 3,
-          fontWeight: 600,
-        }}
-      >
-        Container Management
-      </Typography>
+   <Box
+  display="flex"
+  justifyContent="space-between"
+  alignItems="center"
+  mb={3}
+>
+  <Typography
+    variant="h4"
+    sx={{
+      fontWeight: 600,
+    }}
+  >
+    Container Management
+  </Typography>
+
+  <Button
+    variant="contained"
+    onClick={() => setOpenDialog(true)}
+  >
+    Create Container
+  </Button>
+</Box>
       <TextField
         label="Search Container, Status or Location"
         variant="outlined"
@@ -117,6 +170,48 @@ const Containers = () => {
           autoHeight
         />
       </Paper>
+      <Dialog
+  open={openDialog}
+  onClose={handleCloseDialog}
+  fullWidth
+  maxWidth="sm"
+>
+  <DialogTitle>Create New Container</DialogTitle>
+
+  <DialogContent>
+    <TextField
+      autoFocus
+      margin="dense"
+      label="Container Code"
+      fullWidth
+      value={containerCode}
+      onChange={(e) => {
+        setContainerCode(e.target.value);
+        setCreateError("");
+      }}
+    />
+
+    {createError && (
+      <Typography color="error" sx={{ mt: 2 }}>
+        {createError}
+      </Typography>
+    )}
+  </DialogContent>
+
+  <DialogActions>
+    <Button onClick={handleCloseDialog}>
+      Cancel
+    </Button>
+
+    <Button
+      variant="contained"
+      onClick={handleCreateContainer}
+      disabled={!containerCode.trim()}
+    >
+      Create
+    </Button>
+  </DialogActions>
+</Dialog>
     </Box>
   );
 };

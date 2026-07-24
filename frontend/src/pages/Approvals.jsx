@@ -21,6 +21,7 @@ export default function Approvals() {
 
     const loadApprovals = async () => {
         const data = await getPendingApprovals();
+
         setApprovals(data);
     };
 
@@ -60,7 +61,7 @@ export default function Approvals() {
 
                         <TableRow key={approval.id}>
 
-                            <TableCell>{approval.container_id}</TableCell>
+                            <TableCell>{approval.container_code}</TableCell>
 
                             <TableCell>{approval.requested_action}</TableCell>
 

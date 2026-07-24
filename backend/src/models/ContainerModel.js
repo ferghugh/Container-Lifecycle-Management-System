@@ -160,6 +160,7 @@ async function updateProductionUse(id, useCount, lastCycleStartAt) {
 
   return result.affectedRows > 0;
 }
+
 // Export the functions for use in other parts of the application
 module.exports = {
   getAllContainers,
@@ -169,5 +170,5 @@ module.exports = {
   getContainerByCode,
   updateContainer,
   resetLifecycle,
-  updateProductionUse,  
+  
 };

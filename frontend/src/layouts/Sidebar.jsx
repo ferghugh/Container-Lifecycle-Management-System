@@ -29,10 +29,6 @@ function Sidebar() {
                     <ListItemText primary="Approvals" />
                 </ListItemButton>
 
-                <ListItemButton onClick={() => navigate("/observations")}>
-                    <ListItemText primary="Observations" />
-                </ListItemButton>
-
                 <ListItemButton onClick={() => navigate("/reports")}>
                     <ListItemText primary="Reports" />
                 </ListItemButton>

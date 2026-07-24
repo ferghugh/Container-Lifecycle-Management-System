@@ -117,6 +117,7 @@ async function reviewApproval(id, reviewData, user) {
     };
   }
 
+
   // ------------------------------------
   // ALL OTHER APPROVALS
   // ------------------------------------
@@ -133,6 +134,10 @@ async function getLatestApproval(containerId, previousStage, nextStage) {
   const action = stageRules.getApprovalAction(previousStage, nextStage);
   return await approvalModel.getLatestApproval(containerId, action);
 }
+// Retrieve the latest approval by requested action
+async function getLatestApprovalByAction(containerId, action) {
+  return await approvalModel.getLatestApproval(containerId, action);
+}
 
 async function getPendingApprovals() {
   return await approvalModel.getPendingApprovals();
@@ -143,4 +148,5 @@ module.exports = {
   reviewApproval,
   getLatestApproval,
   getPendingApprovals,
+  getLatestApprovalByAction,
 };

@@ -8,7 +8,7 @@ const approvalService = require("./approvalService");
 const { STAGES } = require("../constants/stageRules");
 const LOCATIONS = require("../constants/locations");
 
-const { simulateObservation } = require("../simulation/simulateObservation");
+
 
 // ------------------------------------------------
 // Simulation User
