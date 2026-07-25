@@ -60,7 +60,7 @@ const ContainerDetails = () => {
   };
 const handleMove = async () => {
   try {
-
+    
     const response = await moveContainer(container.id, {
       nextStage,
     });

@@ -267,6 +267,16 @@ function getLocationForStage(stage) {
       throw new Error("Unknown stage");
   }
 }
+async function getContainerByCode(code) {
+
+    const container = await containerModel.getContainerByCode(code);
+
+    if (!container) {
+        throw new Error("Container not found");
+    }
+
+    return container;
+}
 
 module.exports = {
   getAllContainers,
@@ -274,4 +284,5 @@ module.exports = {
   createContainer,
   updateContainer,
   moveContainer,
+  getContainerByCode,
 };

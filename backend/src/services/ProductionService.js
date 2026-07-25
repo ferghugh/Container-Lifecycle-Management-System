@@ -60,9 +60,9 @@ async function runProductionBatch(containerId) {
         current_status: STAGES.CLEANING,
         location_id: LOCATIONS.CLEANING,
 
-        is_damaged: container.is_damaged,
+      
         requires_qa_approval: container.requires_qa_approval,
-        requires_swab: container.requires_swab,
+    
 
         use_count: 14,
         last_cycle_start_at: container.last_cycle_start_at,

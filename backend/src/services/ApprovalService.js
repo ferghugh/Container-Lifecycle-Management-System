@@ -88,9 +88,9 @@ async function reviewApproval(id, reviewData, user) {
         current_status: STAGES.CLEAN_STORAGE,
         location_id: LOCATIONS.CLEAN_STORAGE,
 
-        is_damaged: container.is_damaged,
+        
         requires_qa_approval: false,
-        requires_swab: container.requires_swab,
+  
 
         use_count: 0,
         last_cycle_start_at: null,

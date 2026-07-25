@@ -107,9 +107,7 @@ if (
     {
       current_status: container.current_status,
       location_id: container.location_id,
-      is_damaged: container.is_damaged,
       requires_qa_approval: false,
-      requires_swab: container.requires_swab,
       last_cycle_start_at: null,
       use_count: 0,
       initial_qa_approved_at: container.initial_qa_approved_at,

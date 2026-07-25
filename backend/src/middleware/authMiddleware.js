@@ -9,8 +9,11 @@ const authMiddleware = (req, res, next) => {
   // bearer <token>
   const authHeader = req.headers.authorization;
 
+
+
   // Check if the authorization header is present and starts with "Bearer "
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+
     return res.status(401).json({ message: "No token provided" });
   }
   // Extract the token from the header
@@ -19,6 +22,7 @@ const authMiddleware = (req, res, next) => {
   try {
     // verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  
     //attach only required user info to req.user
     req.user = {
       id: decoded.id,

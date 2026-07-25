@@ -10,6 +10,8 @@ const containerController = require("../controllers/containerController");
 // Retrieve all containers
 router.get("/", authMiddleware, containerController.getAllContainers);
 
+router.get("/:id", authMiddleware, containerController.getContainerById);
+
 // Retrieve a single container
 router.get("/:id", authMiddleware, containerController.getContainerById);
 
@@ -34,6 +36,12 @@ router.post(
   "/:id/move",
   authMiddleware,
    containerController.moveContainer
+);
+// Retrieve a container by container code
+router.get(
+  "/code/:code",
+  authMiddleware,
+  containerController.getContainerByCode
 );
 
 

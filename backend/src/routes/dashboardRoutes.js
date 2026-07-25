@@ -7,9 +7,16 @@ const dashboardController =
     require("../controllers/dashboardController");
 
 router.get(
+    "/analytics",
+    authMiddleware,
+    dashboardController.getAnalytics
+);
+
+router.get(
     "/",
     authMiddleware,
     dashboardController.getDashboard
 );
+
 
 module.exports = router;

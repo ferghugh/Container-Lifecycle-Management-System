@@ -16,9 +16,35 @@ async function getAllContainers(req, res) {
 // Retrieve a container by ID
 async function getContainerById(req, res) {
   try {
+      
+
     const { id } = req.params;
 
     const container = await containerService.getContainerById(id);
+  
+    res.status(200).json(container);
+
+  } catch (error) {
+
+    if (error.message === "Container not found") {
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to retrieve container.",
+    });
+  }
+}
+// Retrieve a container by container code
+async function getContainerByCode(req, res) {
+  try {
+    const { code } = req.params;
+
+    const container = await containerService.getContainerByCode(code);
 
     res.status(200).json(container);
 
@@ -37,7 +63,6 @@ async function getContainerById(req, res) {
     });
   }
 }
-
 // Create a new container
 async function createContainer(req, res) {
   try {
@@ -121,10 +146,13 @@ async function moveContainer(req, res) {
 }
 
 
+
+
 module.exports = {
   getAllContainers,
   getContainerById,
   createContainer,
   updateContainer,
   moveContainer,
+  getContainerByCode,
 };

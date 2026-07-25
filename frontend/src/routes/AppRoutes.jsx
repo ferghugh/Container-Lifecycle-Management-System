@@ -4,11 +4,11 @@ import Logout from "../pages/Logout";
 import Dashboard from "../pages/Dashboard";
 import Containers from "../pages/Containers";
 import Approvals from "../pages/Approvals";
-import Reports from "../pages/Reports";
+import Analytics from "../pages/Analytics";
 import ContainerDetails from "../pages/ContainerDetails";
 import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
-import ApprovalsPage from "../pages/Approvals";
+
 
 
 const AppRoutes = () => {
@@ -29,11 +29,11 @@ const AppRoutes = () => {
 
             <Route path="/approvals" element={<Approvals />} />
 
-            <Route path="/reports" element={<Reports />} />
+            <Route path="/analytics" element={<Analytics />} />
 
             <Route path="/containers/:id" element={<ContainerDetails />} />
 
-            <Route path="/approvals" element={<Approvals />} />
+           
 
           </Route>
         </Route>

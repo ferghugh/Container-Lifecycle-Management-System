@@ -100,14 +100,7 @@ async function updateContainerWorkflow(id, workflowData) {
   return result.affectedRows > 0;
 }
 
-//Retrieve a container by its unique code from the database
-async function getContainerByCode(containerCode) {
-  const [rows] = await db.query(
-    "SELECT * FROM containers WHERE container_code = ?",
-    [containerCode],
-  );
-  return rows[0] || null;
-}
+
 
 // Update administrative container details
 async function updateContainer(id, containerData) {
@@ -152,6 +145,19 @@ async function updateProductionUse(id, useCount, lastCycleStartAt) {
 
   return result.affectedRows > 0;
 }
+async function getContainerByCode(code) {
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM containers
+        WHERE container_code = ?
+        `,
+        [code]
+    );
+
+    return rows[0];
+}
 
 // Export the functions for use in other parts of the application
 module.exports = {
@@ -163,4 +169,5 @@ module.exports = {
   updateContainer,
   resetLifecycle,
   updateProductionUse,
+ 
 };
