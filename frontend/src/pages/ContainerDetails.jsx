@@ -22,6 +22,8 @@ import STATUS from "../constants/status";
 import LOCATIONS from "../constants/locations";
 import TRANSITIONS from "../constants/transitions";
 import { useNavigate } from "react-router-dom";
+import QRCode from "react-qr-code";
+import Barcode from "react-barcode";
 
 const ContainerDetails = () => {
   const { id } = useParams();
@@ -58,25 +60,23 @@ const ContainerDetails = () => {
       year: "numeric",
     });
   };
-const handleMove = async () => {
-  try {
-    
-    const response = await moveContainer(container.id, {
-      nextStage,
-    });
-     
-     alert(response.message);
+  const handleMove = async () => {
+    try {
+      const response = await moveContainer(container.id, {
+        nextStage,
+      });
 
-    setOpenDialog(false);
-    setNextStage("");
+      alert(response.message);
 
-    await loadContainer();
+      setOpenDialog(false);
+      setNextStage("");
 
-  } catch (error) {
-    console.error(error);
-    alert(error.response?.data?.message || "Failed to move container.");
-  }
-};
+      await loadContainer();
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || "Failed to move container.");
+    }
+  };
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" sx={{ fontWeight: 600 }}>
@@ -171,6 +171,52 @@ const handleMove = async () => {
         </Grid>
 
         <Divider sx={{ my: 4 }} />
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mb: 4,
+          }}
+        >
+          <Paper
+            elevation={2}
+            sx={{
+              p: 3,
+              textAlign: "center",
+              width: 260,
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Container QR Code
+            </Typography>
+
+            <QRCode value={container.container_code} size={300} />
+
+            <Typography sx={{ mt: 2 }} fontWeight="bold">
+              {container.container_code}
+            </Typography>
+            <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+              Container Barcode
+            </Typography>
+
+            <Paper
+              sx={{
+                p: 3,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Barcode
+                value={container.container_code}
+                format="CODE128"
+                width={2}
+                height={100}
+                displayValue={true}
+              />
+            </Paper>
+          </Paper>
+        </Box>
 
         <Box
           sx={{

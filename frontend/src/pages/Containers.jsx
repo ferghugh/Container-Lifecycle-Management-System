@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { getContainers, createContainer } from "../services/containerService";
 import STATUS from "../constants/status";
 import LOCATIONS from "../constants/locations";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Chip from "@mui/material/Chip";
 
 const getStatusChip = (status) => {
@@ -67,6 +67,8 @@ const Containers = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [containerCode, setContainerCode] = useState("");
   const [createError, setCreateError] = useState("");
+  const [searchParams] = useSearchParams();
+  const dashboardFilter = searchParams.get("filter");
 
   const loadContainers = async () => {
     try {
@@ -149,6 +151,10 @@ const Containers = () => {
   ];
 
   const filteredContainers = containers.filter((container) => {
+    if (dashboardFilter === "near-expiry") {
+      return container.use_count >= 12;
+    }
+
     const search = searchTerm.toLowerCase();
 
     return (
@@ -179,6 +185,29 @@ const Containers = () => {
           Create Container
         </Button>
       </Box>
+      
+      {dashboardFilter === "near-expiry" && (
+        <Paper
+          sx={{
+            p: 2,
+            mb: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            bgcolor: "#FFF3E0",
+            borderLeft: "5px solid #ED6C02",
+          }}
+        >
+          <Typography fontWeight="bold">
+            Showing containers approaching lifecycle expiry (12+ production
+            uses).
+          </Typography>
+
+          <Button size="small" onClick={() => navigate("/containers")}>
+            Clear Filter
+          </Button>
+        </Paper>
+      )}
       <TextField
         label="Search by container code, status or location"
         variant="outlined"
@@ -187,7 +216,6 @@ const Containers = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-
       <Paper elevation={3} sx={{ mt: 2 }}>
         <DataGrid
           rowHeight={55}
@@ -241,9 +269,9 @@ const Containers = () => {
           <Button
             variant="contained"
             size="large"
-            onClick={() => setOpenDialog(true)}
+            onClick={handleCreateContainer}
           >
-            + Create Container
+            Create Container
           </Button>
         </DialogActions>
       </Dialog>

@@ -8,6 +8,7 @@ import Analytics from "../pages/Analytics";
 import ContainerDetails from "../pages/ContainerDetails";
 import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
+import QuickScan from "../pages/QuickScan";
 
 
 
@@ -32,6 +33,8 @@ const AppRoutes = () => {
             <Route path="/analytics" element={<Analytics />} />
 
             <Route path="/containers/:id" element={<ContainerDetails />} />
+
+            <Route path="/quick-scan" element={<QuickScan />} />
 
            
 

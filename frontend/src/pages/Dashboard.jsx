@@ -65,11 +65,11 @@ const Dashboard = () => {
           }}
         >
           <QrCodeScannerIcon />
-          Quick Scan Container
+           Scan Container
         </Typography>
 
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Scan a barcode or enter a container code to open its details.
+          Scan a QR code or Code 128 barcode to retrieve a container record.
         </Typography>
 
         <Stack direction="row" spacing={2} alignItems="center">
