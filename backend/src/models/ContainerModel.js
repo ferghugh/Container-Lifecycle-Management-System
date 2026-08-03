@@ -48,7 +48,7 @@ async function createContainer(containerData) {
     requires_qa_approval,
     last_cycle_start_at,
   } = containerData;
-
+// Insert the new container into the database
   const [result] = await db.query(
     "INSERT INTO containers (container_code, current_status, location_id, requires_qa_approval, last_cycle_start_at, use_count, initial_qa_approved_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
     [
@@ -73,10 +73,12 @@ async function updateContainerWorkflow(id, workflowData) {
     requires_qa_approval,
     use_count,
     last_cycle_start_at,
+     requires_supervisor_reset,
     initial_qa_approved_at,
   } = workflowData;
 
   const [result] = await db.query(
+    
     `UPDATE containers
      SET
         current_status = ?,
@@ -84,6 +86,7 @@ async function updateContainerWorkflow(id, workflowData) {
         requires_qa_approval = ?,
         last_cycle_start_at = ?,
         use_count = ?,
+        requires_supervisor_reset = ?,
         initial_qa_approved_at = ?
      WHERE id = ?`,
     [
@@ -92,6 +95,7 @@ async function updateContainerWorkflow(id, workflowData) {
       requires_qa_approval,
       last_cycle_start_at,
       use_count,
+      requires_supervisor_reset,
       initial_qa_approved_at,
       id,
     ],
@@ -113,7 +117,7 @@ async function updateContainer(id, containerData) {
 
   return result.affectedRows > 0;
 }
-
+// Reset the lifecycle of a container (use count and last cycle start date)
 async function resetLifecycle(containerId) {
 
     const [result] = await db.query(
@@ -127,7 +131,7 @@ async function resetLifecycle(containerId) {
 
     return result.affectedRows > 0;
 }
-
+// Update production use count and last cycle start date
 async function updateProductionUse(id, useCount, lastCycleStartAt) {
 
   const [result] = await db.query(
@@ -145,6 +149,7 @@ async function updateProductionUse(id, useCount, lastCycleStartAt) {
 
   return result.affectedRows > 0;
 }
+// Retrieve a container by its code
 async function getContainerByCode(code) {
 
     const [rows] = await db.query(

@@ -22,7 +22,7 @@ describe("Container API - Movement", () => {
     qaToken = await getQAToken();
     supervisorToken = await getSupervisorToken();
   });
-
+// Test to move a container through its lifecycle stages
   test("should move container from RECEIVED to CLEANING", async () => {
     const id = await createTestContainer(qaToken);
 
@@ -31,7 +31,7 @@ describe("Container API - Movement", () => {
     expect(response.statusCode).toBe(200);
     expect(response.body.container.current_status).toBe(2);
   });
-
+// Test to move a container from CLEANING to CLEAN_STORAGE
   test("should move container from CLEANING to CLEAN_STORAGE", async () => {
     const id = await createTestContainer(qaToken);
 
@@ -42,7 +42,7 @@ describe("Container API - Movement", () => {
     expect(response.statusCode).toBe(200);
     expect(response.body.container.current_status).toBe(3);
   });
-
+// Test to ensure QA approval is required before moving to PRODUCTION
   test("should require QA approval before first Production", async () => {
     const id = await createTestContainer(qaToken);
 
@@ -55,7 +55,7 @@ describe("Container API - Movement", () => {
     expect(response.body.approval).toBeDefined();
     expect(response.body.message).toMatch(/approval/i);
   });
-
+// Test to ensure a container can move to PRODUCTION after QA approval
   test("should move container to Production after QA approval", async () => {
     const id = await createTestContainer(qaToken);
 

@@ -9,9 +9,8 @@ import ContainerDetails from "../pages/ContainerDetails";
 import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 import QuickScan from "../pages/QuickScan";
-
-
-
+// AppRoutes component that defines the routing structure of the application, 
+// including protected routes and layout components.
 const AppRoutes = () => {
   return (
     <BrowserRouter>
@@ -35,9 +34,6 @@ const AppRoutes = () => {
             <Route path="/containers/:id" element={<ContainerDetails />} />
 
             <Route path="/quick-scan" element={<QuickScan />} />
-
-           
-
           </Route>
         </Route>
       </Routes>

@@ -1,5 +1,6 @@
 const dashboardService = require("../services/dashboardService");
 
+// Controller function to handle the request for dashboard summary
 async function getDashboard(req, res) {
 
     try {
@@ -20,6 +21,7 @@ async function getDashboard(req, res) {
     }
 
 }
+// Controller function to handle the request for analytics data
 async function getAnalytics(req, res) {
 
     try {

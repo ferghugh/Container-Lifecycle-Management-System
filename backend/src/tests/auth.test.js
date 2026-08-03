@@ -1,6 +1,7 @@
 const request = require("supertest");
 const app = require("../app");
 
+// Test suite for API health check
 describe("Authentication", () => {
 
     test("Login with valid credentials returns 200", async () => {

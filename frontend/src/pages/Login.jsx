@@ -10,7 +10,8 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+// Login component that handles user authentication by allowing users to enter
+//  their username and password, and then sending a request to the backend for verification.
 export default function Login() {
   // State for username, password and login message
   const [username, setUsername] = useState("");
@@ -27,7 +28,7 @@ export default function Login() {
         {
           username,
           password,
-        }
+        },
       );
 
       // Store JWT token
@@ -35,9 +36,9 @@ export default function Login() {
 
       // Store user role (if returned by the backend)
       if (response.data.user) {
-       localStorage.setItem("userId", response.data.user.id);
-       localStorage.setItem("username", response.data.user.username);
-       localStorage.setItem("role", response.data.user.role);
+        localStorage.setItem("userId", response.data.user.id);
+        localStorage.setItem("username", response.data.user.username);
+        localStorage.setItem("role", response.data.user.role);
       }
 
       // Notify other components
@@ -48,7 +49,6 @@ export default function Login() {
 
       // Navigate to dashboard
       navigate("/dashboard");
-
     } catch (error) {
       console.error(error);
 
@@ -59,20 +59,11 @@ export default function Login() {
   return (
     <Container maxWidth="sm">
       <Paper elevation={4} sx={{ p: 5, mt: 10 }}>
-
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-        >
+        <Typography variant="h4" align="center" gutterBottom>
           Container Management System
         </Typography>
 
-        <Typography
-          variant="body1"
-          align="center"
-          sx={{ mb: 3 }}
-        >
+        <Typography variant="body1" align="center" sx={{ mb: 3 }}>
           Sign in to continue
         </Typography>
 
@@ -103,16 +94,11 @@ export default function Login() {
           </Typography>
         )}
 
-       <Box sx={{ textAlign: "center", mt: 3 }}>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={onLoginClick}
-          >
+        <Box sx={{ textAlign: "center", mt: 3 }}>
+          <Button variant="contained" size="large" onClick={onLoginClick}>
             Login
           </Button>
         </Box>
-
       </Paper>
     </Container>
   );

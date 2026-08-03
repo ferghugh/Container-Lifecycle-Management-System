@@ -89,19 +89,17 @@ async function reviewApproval(id, reviewData, user) {
     reviewed_by_user_id: user.id,
     comments: reviewData.comments,
   });
-  // ------------------------------------
-// START NEW LIFECYCLE
-// ------------------------------------
-
+  
+// start new lifecyycle
 if (
   status === "APPROVED" &&
   approval.required_role === "SUPERVISOR"
 ) {
-
+// Reset the container's lifecycle
   const container = await containerModel.getContainerById(
     approval.container_id
   );
-
+// Update the container's workflow to reset its lifecycle
   await containerModel.updateContainerWorkflow(
     approval.container_id,
     {
@@ -114,14 +112,14 @@ if (
     }
   );
 }
-
+// Return the result of the review
   if (status === "APPROVED") {
     return {
       message: "Approval approved. Container is authorised for movement.",
       approvalId: approval.id,
     };
   }
-
+// Return the result of the review if rejected
   return {
     message: "Approval rejected.",
     approvalId: approval.id,

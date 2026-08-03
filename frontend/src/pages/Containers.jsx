@@ -16,7 +16,8 @@ import STATUS from "../constants/status";
 import LOCATIONS from "../constants/locations";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Chip from "@mui/material/Chip";
-
+// Containers component that fetches and displays a list of containers,
+//  allowing users to create new containers and filter/search through existing ones.
 const getStatusChip = (status) => {
   const config = {
     Received: { color: "default", variant: "outlined" },
@@ -35,7 +36,7 @@ const getStatusChip = (status) => {
     />
   );
 };
-
+// Function to get a Chip component representing whether QA approval is required
 const getQAChip = (value) =>
   value === "Yes" ? (
     <Chip label="Required" color="warning" size="small" />
@@ -47,7 +48,7 @@ const getQAChip = (value) =>
       size="small"
     />
   );
-
+// Function to get a Chip component representing the use count of a container
 const getUseCountChip = (count) => {
   if (count >= 14) {
     return <Chip label={count} color="error" size="small" />;
@@ -59,6 +60,8 @@ const getUseCountChip = (count) => {
 
   return <Chip label={count} variant="outlined" size="small" />;
 };
+// Containers component that fetches and displays a list of containers,
+//  allowing users to create new containers and filter/search through existing ones.
 const Containers = () => {
   const navigate = useNavigate();
   const [containers, setContainers] = useState([]);
@@ -75,7 +78,7 @@ const Containers = () => {
       const data = await getContainers();
 
       console.log("Containers:", data);
-
+      // Format the container data to include human-readable status and location
       const formattedData = data.map((container) => ({
         ...container,
         current_status: STATUS[container.current_status] || "Unknown",
@@ -88,11 +91,13 @@ const Containers = () => {
       console.error("Failed to load containers:", error);
     }
   };
+  // Function to handle closing the create container dialog and resetting related state
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setContainerCode("");
     setCreateError("");
   };
+  // Function to handle creating a new container with the provided container code
   const handleCreateContainer = async () => {
     try {
       setCreateError("");
@@ -114,7 +119,7 @@ const Containers = () => {
   useEffect(() => {
     loadContainers();
   }, []);
-
+ // Function to handle closing the create container dialog and resetting related state
   const columns = [
     {
       field: "container_code",
@@ -149,7 +154,7 @@ const Containers = () => {
       renderCell: (params) => getQAChip(params.value),
     },
   ];
-
+// Filter containers based on the dashboard filter and search term
   const filteredContainers = containers.filter((container) => {
     if (dashboardFilter === "near-expiry") {
       return container.use_count >= 12;
@@ -185,7 +190,7 @@ const Containers = () => {
           Create Container
         </Button>
       </Box>
-      
+
       {dashboardFilter === "near-expiry" && (
         <Paper
           sx={{

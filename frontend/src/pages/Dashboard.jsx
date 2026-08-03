@@ -14,7 +14,8 @@ import { getDashboardSummary } from "../services/dashboardService";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { useNavigate } from "react-router-dom";
 import { getContainerByCode } from "../services/containerService";
-
+// Dashboard component that displays a summary of container statuses and 
+// allows users to quickly scan or enter a container code to view its details.
 const Dashboard = () => {
   const [summary, setSummary] = useState(null);
   const [containerCode, setContainerCode] = useState("");
@@ -33,7 +34,7 @@ const Dashboard = () => {
   useEffect(() => {
     loadDashboard();
   }, []);
-
+// Function to open a container's details page based on the entered or scanned container code
   const openContainer = async () => {
     if (!containerCode.trim()) return;
 
@@ -65,7 +66,7 @@ const Dashboard = () => {
           }}
         >
           <QrCodeScannerIcon />
-           Scan Container
+          Scan Container
         </Typography>
 
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>

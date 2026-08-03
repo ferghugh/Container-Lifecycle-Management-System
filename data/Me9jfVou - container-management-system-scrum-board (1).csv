@@ -1,0 +1,299 @@
+Card ID,Card Name,Card URL,Card Description,Labels,Members,Due Date,Attachment Count,Attachment Links,Checklist Item Total Count,Checklist Item Completed Count,Vote Count,Comment Count,Last Activity Date,List ID,List Name,Board ID,Board Name,Archived,Start Date,Due Complete,Due Reminder
+6a5e314949c76444d0970eca,Operational Reports(5SP),https://trello.com/c/5ETjA1mE/56-operational-reports5sp,"**User Story**
+
+> As a manager, I want to generate operational reports so that I can support production decisions.
+
+**Story Points:** 5",Could Have (green),,,0,,0,0,0,0,2026-07-28T11:39:51.365Z,6a5b67305c1ad53dd09c9309,Sprint Backlog,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2fe0e3897ce44393a06b,Recent Activity(5SP),https://trello.com/c/5b27jYWO/49-recent-activity5sp,"**User Story**
+
+> As a supervisor, I want to view recent container movements so that I can monitor workflow activity.
+
+**Story Points:** 5",Must Have (red),,,0,,0,0,0,0,2026-07-27T18:07:13.424Z,6a5b67305c1ad53dd09c9309,Sprint Backlog,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a675d53d751d183b9d45fd9,Project Planning and Documentation(3SP),https://trello.com/c/MrkSuovW/62-project-planning-and-documentation3sp,"**Story Points:** 3
+
+**Sprint:** 1
+
+GitHub Evidence:
+
+**27 Jun 2026 – Initial project setup with proposal, ERD and documentation**",Must Have (red),,,0,,6,0,0,0,2026-07-27T13:38:35.515Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a675e481a85376423a25950,Establish Project Structure(2SP),https://trello.com/c/ofoes04a/63-establish-project-structure2sp,"**User Story**
+
+> As a developer, I want a well-structured project architecture so that the application can be developed and maintained efficiently.
+
+Story Points: 2
+
+Sprint: 1
+
+### GitHub evidence:
+
+28 Jun 2026 – Correct project structure",Must Have (red),,,0,,5,0,0,0,2026-07-27T13:38:24.324Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b690e45c6b4748bffaa88,User Authentication (3 SP),https://trello.com/c/gKvIjIZ4/3-user-authentication-3-sp,"As a user, I want to securely log into the system so that I can access features according to my role.
+
+Priority: Must Have
+Story Points: 3
+Sprint: 1
+
+GitHub Evidence: 29 Jun 2026 – Complete JWT authentication module",Must Have (red),,,0,,5,0,0,0,2026-07-27T13:28:03.952Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b748e26cfaf1e5f9d44eb,Role-Based Access Control(5 SP),https://trello.com/c/9wccsfSz/21-role-based-access-control5-sp,"User Story:
+As a user, I want my permissions to be based on my assigned role so that I can only perform authorised actions.
+
+Priority: Must Have
+Story Points: 5
+Sprint: 1
+
+GitHub Evidence:
+29 Jun 2026 – Complete JWT authentication module",Must Have (red),,,0,,4,0,0,0,2026-07-18T12:43:59.473Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b753fc66ba54f5eaf951d,Register Container(5SP),https://trello.com/c/w1AlnYXR/22-register-container5sp,"User Story:
+As an Operator, I want to register a new container so that it can be tracked throughout its lifecycle.
+
+Priority: Must Have
+Story Points: 3
+Sprint: 1
+
+GitHub Evidence:
+29 Jun 2026 – Implement container management module",Must Have (red),,,0,,5,0,0,0,2026-07-18T12:46:56.248Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b8197b956bfe2057ae799,Move Containers Through Workflow(SP8),https://trello.com/c/wUMpWN7R/23-move-containers-through-workflowsp8,"User Story:
+As an Operator, I want to move containers between workflow stages so that GMP procedures are followed throughout the container lifecycle.
+
+Priority: Must Have
+Story Points: 8
+Sprint: 2
+
+GitHub Evidence:
+30 Jun 2026 – Implement lifecycle workflow, movement tracking and QA approval",Must Have (red),,,0,,5,0,0,0,2026-07-18T13:40:38.608Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b826ba5d399f980083202,Prevent Invalid Workflow Transitions(5SP),https://trello.com/c/AqoLDGJ3/24-prevent-invalid-workflow-transitions5sp,"User Story:
+As the system, I want to prevent invalid workflow transitions so that containers cannot bypass required GMP stages.
+
+Priority: Must Have
+Story Points: 5
+Sprint: 2
+
+GitHub Evidence:
+30 Jun 2026 – Implement lifecycle workflow, movement tracking and QA approval",Must Have (red),,,0,,4,0,0,0,2026-07-18T13:42:56.021Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b82f468c5c723ec07eb21,QA Approval(5SP),https://trello.com/c/Q81sDttK/25-qa-approval5sp,"User Story:
+As a QA user, I want to approve containers before their first use in production so that only compliant containers enter production.
+
+Priority: Must Have
+Story Points: 5
+Sprint: 2
+
+GitHub Evidence:
+30 Jun 2026 – Implement lifecycle workflow, movement tracking and QA approval
+1 Jul 2026 – Implement production approval workflow with operator retry",Must Have (red),,,0,,4,0,0,0,2026-07-18T13:44:52.608Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b8367f82b6b97d8b67879,Supervisor Approval(5SP),https://trello.com/c/WTA6dpTl/26-supervisor-approval5sp,"User Story:
+As a Supervisor, I want to approve containers that have completed the required cleaning process so that they can safely begin a new production lifecycle.
+
+Priority: Must Have
+Story Points: 5
+Sprint: 3
+
+GitHub Evidence:
+1 Jul 2026 – Implement supervisor approval workflow for production lifecycle",Must Have (red),,,0,,4,0,0,0,2026-07-20T12:11:22.300Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e0e8e499799a5c14f0584,Integration Testing(3Sp),https://trello.com/c/0Wceu0pB/38-integration-testing3sp,"User Story:
+
+As a developer, I want to verify the complete container management workflow through integration testing so that the application behaves correctly under realistic scenarios.
+
+‌
+
+Priority: Must Have
+Story Points: 3
+Sprint: 5",Must Have (red),,,0,,7,0,0,0,2026-07-27T14:31:08.293Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b85bfea1f6ad1d738c01e,Production Use Tracking(5SP),https://trello.com/c/ysKn9Gyj/28-production-use-tracking5sp,"User Story:
+As the system, I want to record each production use so that container usage can be accurately monitored.
+
+Priority: Must Have
+Story Points: 5
+Sprint: 3",Must Have (red),,,0,,4,0,0,0,2026-07-20T12:11:24.206Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b84c5be75281ce04dea22,Production Lifecycle(8SP),https://trello.com/c/TaoOQLg5/27-production-lifecycle8sp,"User Story:
+As the system, I want to manage the complete production lifecycle so that containers progress through production according to GMP procedures.
+
+Priority: Must Have
+Story Points: 8
+Sprint: 3
+
+GitHub Evidence:
+
+2 Jul – Complete first container lifecycle with QA approval
+
+2 Jul – Complete initial production approval workflow",Must Have (red),,,0,,4,0,0,0,2026-07-20T12:11:26.286Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b871ff00558b688e22be2,Workflow Refinement(3SP),https://trello.com/c/951j7CY0/30-workflow-refinement3sp,"User Story:
+As a developer, I want to improve the workflow implementation so that the application remains reliable and maintainable.
+
+Priority: Must Have
+Story Points: 3
+Sprint: 3
+
+GitHub Evidence:
+3 Jul – Fixed container workflow, approval logic, lifecycle updates, and cleaned service files",Should Have (orange),,,0,,4,0,0,0,2026-07-20T12:11:28.469Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b867d5c5a576018f59b62,Lifecycle Validation(5SP),https://trello.com/c/lnSieJkj/29-lifecycle-validation5sp,"User Story:
+As the system, I want to validate lifecycle rules so that containers remain compliant with GMP requirements.
+
+Priority: Must Have
+Story Points: 5
+Sprint: 3",Must Have (red),,,0,,4,0,0,0,2026-07-20T12:11:31.012Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b8c4bf552b1882de46320,Use Expiry Rule(5SP),https://trello.com/c/T2dnRq7v/31-use-expiry-rule5sp,"User Story:
+As the system, I want containers to expire automatically after 14 production uses so that expired containers cannot continue in production.
+
+Priority: Must Have
+Story Points: 5
+Sprint: 4
+
+GitHub Evidence:
+4 Jul 2026 – Complete production lifecycle with expiry, approvals and reset",Must Have (red),,,0,,5,0,0,0,2026-07-20T12:11:33.345Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b8cbd884649e4f1679715,30-Day Expiry Rule(5SP),https://trello.com/c/pxBIOIaj/32-30-day-expiry-rule5sp,"User Story:
+As the system, I want containers to expire after 30 calendar days so that GMP lifecycle requirements are enforced.
+
+Priority: Must Have
+Story Points: 5
+Sprint: 4
+
+GitHub Evidence:
+4 Jul 2026 – Complete production lifecycle with expiry, approvals and reset",Must Have (red),,,0,,5,0,0,0,2026-07-20T12:11:38.930Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b8dac9eaf88c8e7a3fc05,Lifecycle Reset(5SP),https://trello.com/c/omGsaafx/34-lifecycle-reset5sp,"User Story:
+As a Supervisor, I want an approved container to begin a new lifecycle after cleaning so that it can safely return to production.
+
+Priority: Must Have
+Story Points: 5
+Sprint: 4
+
+GitHub Evidence:
+4 Jul 2026 – Complete container lifecycle workflow with approvals and expiry reset",Must Have (red),,,0,,5,0,0,0,2026-07-20T12:11:43.945Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b8e15d1c12452aefa4405,Audit Trail(3SP),https://trello.com/c/7wEV96fH/35-audit-trail3sp,"User Story:
+As a user, I want all container movements and approvals recorded so that a complete audit trail is maintained.
+
+Priority: Should Have
+Story Points: 3
+Sprint: 4
+
+GitHub Evidence:
+5 Jul 2026 – Backend Workflow Complete: lifecycle management, QA approval workflow, supervisor approval workflow, observation management, lifecycle expiry/reset, complete audit trail",Must Have (red),,,0,,4,0,0,0,2026-07-21T16:19:10.476Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5b8e74fdb64a82d96c5d6b,Automated Container Simulation(8SP),https://trello.com/c/nLDlGA10/36-automated-container-simulation8sp,"User Story:
+As a developer, I want to simulate container lifecycles so that business rules can be tested automatically using realistic operational data.
+
+Priority: Should Have
+Story Points: 8
+Sprint: 4
+
+GitHub Evidence:
+6 Jul 2026 – Complete automated container lifecycle simulation
+7 Jul 2026 – Complete workflow engine and simulation
+7 Jul 2026 – Complete backend workflow engine and simulation",Should Have (orange),,,0,,6,0,0,0,2026-07-20T12:11:50.894Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e325528ed7395528f6355,Authentication Integration (5 SP),https://trello.com/c/kV8vH5IF/57-authentication-integration-5-sp,"**User Story**
+
+> As a system user, I want to authenticate against the backend so that only authorised users can access the application.
+
+**Story Points:** 5",Must Have (red),,,0,,0,0,0,0,2026-07-20T14:37:53.965Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a623096ce8e678f2febedec,Complete Supervisor Approval and Lifecycle Reset Workflow(8SP),https://trello.com/c/MahlBlVx/61-complete-supervisor-approval-and-lifecycle-reset-workflow8sp,"**Title**
+
+> Complete Supervisor Approval and Lifecycle Reset Workflow
+
+**Story Points**
+
+> **8**
+
+**Business Value**
+
+> Ensures expired containers cannot re-enter production until a Supervisor has approved the lifecycle reset, maintaining GMP compliance and traceability.",Must Have (red),,,0,,8,0,0,0,2026-07-27T18:02:07.690Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5f9a535be85fc91247b24b,System Design Documentation(5SP),https://trello.com/c/iA1fhIAO/60-system-design-documentation5sp,"**User Story**
+
+> Complete System Design Documentation
+
+**Story Points:** 5",Must Have (red),,,0,,8,0,0,0,2026-07-21T16:18:43.342Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2f8283ab283c33c73956,Dashboard Summary(8SP),https://trello.com/c/r3a2SAGN/47-dashboard-summary8sp,"**User Story**
+
+> As a production manager, I want to view a summary of container activity so that I can quickly assess operational status.
+
+**Story Points:** 8",Must Have (red),,,0,,0,0,0,0,2026-07-22T13:54:33.721Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2d1835911454790b4f9d,Frontend Foundation(2SP),https://trello.com/c/O7vRERgq/39-frontend-foundation2sp,"**User Story**
+
+> As a developer, I want to create the React application so that I have a foundation for the frontend.
+
+**Story Points:** 2",Must Have (red),,,0,,0,0,0,0,2026-07-22T13:56:28.525Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2e8cb24d785133a99e21,Secure Authentication(5SP),https://trello.com/c/nt3BbVK2/43-secure-authentication5sp,"**User Story**
+
+> As a logged-in user, I want my session securely maintained so that I do not have to authenticate on every request.
+
+**Story Points:** 5",Should Have (orange),,,0,,0,0,0,0,2026-07-22T13:56:52.843Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2de7e4b6028bf8dd2dfe,Card: Configure Routing(3SP),https://trello.com/c/AjwrEcp2/41-card-configure-routing3sp,"**User Story**
+
+> As a user, I want to navigate between pages so that I can use different parts of the application.
+
+**Story Points:** 3",Must Have (red),,,0,,0,0,0,0,2026-07-22T13:57:06.353Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2ee47688644cfe6ad457,Application Shell(5SP),https://trello.com/c/6EZKz2z3/44-application-shell5sp,"**User Story**
+
+> As a user, I want a consistent application layout so that navigation is intuitive.
+
+**Story Points:** 5",Must Have (red),,,0,,0,0,0,0,2026-07-22T13:57:15.480Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e307733f6dd19b87e3504,Move Container(8SP),https://trello.com/c/j0Ya4VHq/52-move-container8sp,"**User Story**
+
+> As an operator, I want to move containers between workflow stages so that production records remain accurate.
+
+**Story Points:** 8",Must Have (red),,,0,,0,0,0,0,2026-07-27T18:06:18.900Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2f539e38d81098ce277b,Top Navigation(2SP),https://trello.com/c/xZ2aZ1xR/46-top-navigation2sp,"**User Story**
+
+> As a user, I want to see my login information so I know which account I am using.
+
+**Story Points:** 2",Should Have (orange),,,0,,0,0,0,0,2026-07-22T13:57:21.050Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2f26f24fb0eaa1cf7fde,Navigation Sidebar(3SP),https://trello.com/c/KfPsTCoV/45-navigation-sidebar3sp,"**User Story**
+
+> As a user, I want a navigation menu so I can easily access different parts of the system.
+
+**Story Points:** 3",Should Have (orange),,,0,,0,0,0,0,2026-07-22T13:57:23.596Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2e263df64bded8c8eae6,Authentication(5SP),https://trello.com/c/LQOROpNM/42-authentication5sp,"**User Story**
+
+> As a system user, I want to log into the application so that I can securely access the system.
+
+**Story Points:** 5",Must Have (red),,,0,,0,0,0,0,2026-07-22T13:57:43.557Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2fb3e709e8f8b8d38b9f,Summary Cards(5SP),https://trello.com/c/XUGXU9pR/48-summary-cards5sp,"**User Story**
+
+> As a production manager, I want to see the number of containers in each stage so that I can monitor the manufacturing process.
+
+**Story Points:** 5",Must Have (red),,,0,,0,0,0,0,2026-07-22T13:58:02.571Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e2d63da0abb1680f0d09d,Configure Material UI(2SP),https://trello.com/c/VsBfsmXP/40-configure-material-ui2sp,"**User Story**
+
+> As a developer, I want a consistent UI framework so the application has a professional appearance.
+
+**Story Points:** 2",Should Have (orange),,,0,,0,0,0,0,2026-07-22T13:58:08.459Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e0c9c163d87427729f1a7,Bug Fixing & System Stabilisation(3SP),https://trello.com/c/hBDnlK6O/37-bug-fixing-system-stabilisation3sp,"User Story:
+As a system developer, I want the container management system to reliably enforce all lifecycle and approval rules so that container movements remain accurate and compliant.
+
+Priority: Must Have
+Story Points: 3
+Sprint: 5",Must Have (red),,,0,,6,0,0,0,2026-07-22T14:00:03.731Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e30def650fa438d7b2c69,Supervisor Approval(8SP),https://trello.com/c/RFdVXLj9/54-supervisor-approval8sp,"**User Story**
+
+> As a supervisor, I want to approve expired containers after cleaning so that they can safely re-enter service.
+
+**Story Points:** 8",Must Have (red),,,0,,0,0,0,0,2026-07-27T18:06:25.040Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e310a30d16835c0f6dac5,Dashboard Charts(5SP),https://trello.com/c/8gzWduBR/55-dashboard-charts5sp,"**User Story**
+
+> As a manager, I want to view graphical reports so that I can identify trends in container usage.
+
+**Story Points:** 5",Should Have (orange),,,0,,0,0,0,0,2026-07-27T18:06:41.744Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e304857532d59570ab111,Search Containers(3SP),https://trello.com/c/3oWGBpEs/51-search-containers3sp,"**User Story**
+
+> As an operator, I want to search for a container by ID so that I can quickly locate it.
+
+**Story Points:** 3",Must Have (red),,,0,,0,0,0,0,2026-07-27T18:06:52.987Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e30b5fcac88d4a352e82f,QA Approval(8SP),https://trello.com/c/Kw8EZu1I/53-qa-approval8sp,"**User Story**
+
+> As a QA user, I want to approve containers before production so that GMP procedures are followed.
+
+**Story Points:** 8",Must Have (red),,,0,,0,0,0,0,2026-07-27T18:06:57.270Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e301244f35dea53885f07,View Containers(8SP),https://trello.com/c/2QhGOumz/50-view-containers8sp,"**User Story**
+
+> As an operator, I want to view all containers so that I can manage them efficiently.
+
+**Story Points:** 8",Must Have (red),,,0,,0,0,0,0,2026-07-27T18:07:02.492Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a5e34aa838b95742bb49a88,Container Details(3SP),https://trello.com/c/56DaEdVQ/59-container-details3sp,"**User Story**
+
+> As an operator, I want to view detailed information for a container so that I can make workflow decisions.
+
+**Story Points:** 3",Should Have (orange),,,0,,0,0,0,0,2026-07-27T18:11:31.454Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,
+6a6a6c73813586ed0e932f21,Implement QR and Barcode Container Scanning(5SP),https://trello.com/c/p5POJklB/64-implement-qr-and-barcode-container-scanning5sp,"User Story
+
+As a production operator, I want to scan a container's QR code or barcode using a PC webcam so that I can quickly retrieve the correct container record without manually searching.
+
+Sprint 6
+
+SP 5",Should Have (orange),,,0,,6,0,0,0,2026-07-29T21:16:32.220Z,6a5b67305c1ad53dd09c930a,Done,6a5b67305c1ad53dd09c9237,Container Management System – Scrum Board,FALSE,,FALSE,

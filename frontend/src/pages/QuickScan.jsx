@@ -3,7 +3,8 @@ import { Box, Paper, Typography } from "@mui/material";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { useNavigate } from "react-router-dom";
 import { getContainerByCode } from "../services/containerService";
-
+// QuickScan component that allows users to scan a QR code or barcode 
+// to quickly access container details.
 const QuickScan = () => {
   const navigate = useNavigate();
 
@@ -14,12 +15,13 @@ const QuickScan = () => {
         fps: 10,
         qrbox: { width: 250, height: 250 },
       },
-      false
+      false,
     );
-scanner.render(
-  async (decodedText) => {
-    try {
-      console.log("Decoded:", decodedText);
+    // Render the scanner and handle the decoded text to navigate to the container details page
+    scanner.render(
+      async (decodedText) => {
+        try {
+          console.log("Decoded:", decodedText);
 
           const container = await getContainerByCode(decodedText.trim());
 
@@ -33,7 +35,7 @@ scanner.render(
       },
       () => {
         // Ignore continuous scan errors
-      }
+      },
     );
 
     return () => {

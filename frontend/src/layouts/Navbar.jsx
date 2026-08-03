@@ -1,7 +1,7 @@
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getUsername } from "../utils/auth";
-
+// Navbar component that displays the application title, logged-in username, and a logout button.
 function Navbar() {
     const navigate = useNavigate();
 

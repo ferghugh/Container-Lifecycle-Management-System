@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
 import { Box, Grid, Paper, Typography, CircularProgress } from "@mui/material";
-
 import {
   Chart as ChartJS,
   ArcElement,
@@ -15,9 +13,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
 import { Doughnut, Bar, Line } from "react-chartjs-2";
-
 import { getAnalytics } from "../services/analyticsService";
 
 ChartJS.register(
@@ -31,7 +27,7 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-
+// Analytics component that fetches and displays operational analytics data, including KPIs and charts.
 function Analytics() {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -42,7 +38,7 @@ function Analytics() {
       try {
         const data = await getAnalytics();
         setAnalytics(data);
-      } catch (error) {
+      } catch {
         console.error("Failed to load analytics:", error);
       } finally {
         setLoading(false);
@@ -66,7 +62,7 @@ function Analytics() {
       </Box>
     );
   }
-
+// If analytics data is not available, display a message
   const statusChart = {
     labels: analytics.statusDistribution.map((item) => item.status),
 
@@ -86,7 +82,7 @@ function Analytics() {
       },
     ],
   };
-
+// Configuration for the use distribution chart
   const useChart = {
     labels: analytics.useDistribution.map((item) => item.rangeName),
 
@@ -106,7 +102,7 @@ function Analytics() {
       },
     ],
   };
-
+// Configuration for the movement trend chart
   const movementChart = {
     labels: analytics.movementTrend.map((item) =>
       new Date(item.movementDate).toLocaleDateString("en-IE", {
@@ -131,6 +127,7 @@ function Analytics() {
       },
     ],
   };
+  // Chart options for all charts
   const chartOptions = {
     responsive: true,
 

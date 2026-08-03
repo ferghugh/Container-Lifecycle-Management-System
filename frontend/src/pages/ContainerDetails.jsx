@@ -24,7 +24,9 @@ import TRANSITIONS from "../constants/transitions";
 import { useNavigate } from "react-router-dom";
 import QRCode from "react-qr-code";
 import Barcode from "react-barcode";
-
+// ContainerDetails component that fetches and displays detailed information about a specific container,
+//  including its status, location, and QR/barcode representation. 
+// It also allows moving the container to the next stage in its lifecycle.
 const ContainerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -51,15 +53,17 @@ const ContainerDetails = () => {
       </Box>
     );
   }
+// Function to format date strings into a more readable format
   const formatDate = (date) => {
     if (!date) return "N/A";
-
+// Format the date to "DD MMM YYYY" format
     return new Date(date).toLocaleDateString("en-IE", {
       day: "2-digit",
       month: "short",
       year: "numeric",
     });
   };
+  // Function to handle moving the container to the next stage in its lifecycle
   const handleMove = async () => {
     try {
       const response = await moveContainer(container.id, {

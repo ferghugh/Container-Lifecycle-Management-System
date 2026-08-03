@@ -3,13 +3,11 @@
 const express = require("express");
 
 const router = express.Router();
+// Import the simulation controller and authentication middleware
+const simulationController = require("../controllers/simulationController");
 
-const simulationController =
-    require("../controllers/simulationController");
-
-const authMiddleware =
-    require("../middleware/authMiddleware");
-
+const authMiddleware = require("../middleware/authMiddleware");
+// Define the route for running a single simulation, protected by authentication middleware
 router.post(
     "/run",
     authMiddleware,

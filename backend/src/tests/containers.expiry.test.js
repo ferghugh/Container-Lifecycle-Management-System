@@ -31,7 +31,7 @@ describe("Container API - Expiry Rules", () => {
     await move(containerId, operatorToken, 2);
     await move(containerId, operatorToken, 3);
   });
-
+// Test to ensure containers expire after 30 days
   test("should expire after 30 days", async () => {
     await firstProductionEntry(
       containerId,
@@ -49,7 +49,7 @@ describe("Container API - Expiry Rules", () => {
 
     expect(response.body.message).toContain("expired");
   });
-
+// Test to ensure containers can be used before 30 days
   test("should allow production before 30 days", async () => {
     await firstProductionEntry(
       containerId,
@@ -64,7 +64,7 @@ describe("Container API - Expiry Rules", () => {
 
     expect(response.statusCode).toBe(200);
   });
-
+// Test to ensure containers expire after 14 production uses
   test("should expire after 14 production uses", async () => {
     await firstProductionEntry(
       containerId,

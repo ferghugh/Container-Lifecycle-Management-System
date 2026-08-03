@@ -17,7 +17,7 @@ async function createApproval(approvalData) {
 
     } = approvalData;
 
-
+// Insert the new approval request into the database
     const [result] = await db.query(
     `INSERT INTO approval_requests
     (
@@ -56,7 +56,7 @@ async function getPendingApproval(containerId) {
 
   return rows[0] || null;
 }
-
+// Retrieve an approval request by its ID
 async function getApprovalById(id) {
 
   const [rows] = await db.query(
@@ -66,7 +66,7 @@ async function getApprovalById(id) {
 
   return rows[0] || null;
 }
-
+// Update the status of an approval request
 async function reviewApproval(id, reviewData) {
 
   const {

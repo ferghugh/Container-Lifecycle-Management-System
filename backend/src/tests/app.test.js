@@ -1,6 +1,7 @@
 const request = require("supertest");
 const app = require("../app");
 
+// Test suite for API health check
 describe("API Health Check", () => {
 
     test("GET / should return API information", async () => {

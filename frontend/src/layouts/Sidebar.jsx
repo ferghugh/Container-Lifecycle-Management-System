@@ -1,6 +1,6 @@
 import { Box, List, ListItemButton, ListItemText } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+// Sidebar component that provides navigation links to different sections of the application.
 function Sidebar() {
   const navigate = useNavigate();
 
@@ -13,6 +13,7 @@ function Sidebar() {
         borderColor: "divider",
       }}
     >
+     
       <List>
         <ListItemButton onClick={() => navigate("/dashboard")}>
           <ListItemText primary="Dashboard" />

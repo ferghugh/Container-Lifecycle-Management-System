@@ -10,15 +10,15 @@ const LOCATIONS = require("../constants/locations");
 const stageRules = require("../constants/stageRules");
 const { STAGES } = require("../constants/stageRules");
 
-
+// Create a pending approval request
 async function createApproval(container, previousStage, nextStage, user) {
   const action = stageRules.getApprovalAction(previousStage, nextStage);
-
+// Prevent duplicate pending approvals
   const existing = await approvalModel.getPendingApproval(container.id);
   if (existing) {
     throw new Error("A pending approval already exists for this container.");
   }
-
+// Determine the required role for the approval based on the container's state and the transition
   const requiredRole = stageRules.getApprovalRole(previousStage, nextStage);
 
   const approvalId = await approvalModel.createApproval({
@@ -33,8 +33,9 @@ async function createApproval(container, previousStage, nextStage, user) {
 
   return await approvalModel.getApprovalById(approvalId);
 }
+// Review an approval request
 async function reviewApproval(id, reviewData, user) {
-
+// Retrieve the approval request by its ID
   const approval = await approvalModel.getApprovalById(id);
 
   if (!approval) {
@@ -48,7 +49,7 @@ async function reviewApproval(id, reviewData, user) {
   if (approval.status !== "PENDING") {
     throw new Error("Approval has already been reviewed");
   }
-
+// Determine the new status based on the review data
   const status = reviewData.approved ? "APPROVED" : "REJECTED";
 
   await approvalModel.reviewApproval(id, {
@@ -57,9 +58,9 @@ async function reviewApproval(id, reviewData, user) {
     comments: reviewData.comments,
   });
 
-  // ------------------------------------
-  // STOP HERE IF REJECTED
-  // ------------------------------------
+ 
+  // stop here if rejected
+  
   if (status === "REJECTED") {
 
     return {
@@ -69,10 +70,8 @@ async function reviewApproval(id, reviewData, user) {
 
   }
 
-  // ------------------------------------
-  // SUPERVISOR RESET AFTER EXPIRY
-  // ------------------------------------
-  if (
+  // supervisor reset after expiry
+   if (
     approval.requested_action === "SupervisorApproval" ||
     approval.requested_action === "SupervisorExpiryReset"
   ) {
@@ -90,6 +89,7 @@ async function reviewApproval(id, reviewData, user) {
 
         
         requires_qa_approval: false,
+        requires_supervisor_reset: false,
   
 
         use_count: 0,
@@ -97,7 +97,7 @@ async function reviewApproval(id, reviewData, user) {
         initial_qa_approved_at: container.initial_qa_approved_at,
       }
     );
-
+// Log the movement of the container back to Clean Storage
     await movementModel.createMovement({
       container_id: approval.container_id,
       from_stage: STAGES.CLEANING,
@@ -116,19 +116,13 @@ async function reviewApproval(id, reviewData, user) {
       approvalId: approval.id,
     };
   }
-
-
-  // ------------------------------------
-  // ALL OTHER APPROVALS
-  // ------------------------------------
-  return {
+  // all other approvals
+    return {
     message: "Approval approved. Container is authorised for movement.",
     approvalId: approval.id,
   };
 
 }
-
-
 // Retrieve the latest approval for a movement
 async function getLatestApproval(containerId, previousStage, nextStage) {
   const action = stageRules.getApprovalAction(previousStage, nextStage);
@@ -138,7 +132,7 @@ async function getLatestApproval(containerId, previousStage, nextStage) {
 async function getLatestApprovalByAction(containerId, action) {
   return await approvalModel.getLatestApproval(containerId, action);
 }
-
+// Retrieve all pending approvals
 async function getPendingApprovals() {
   return await approvalModel.getPendingApprovals();
 }

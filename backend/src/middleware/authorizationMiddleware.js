@@ -17,7 +17,7 @@ const authorizationMiddleware = (...roles) => {
         message: "Forbidden"
       });
     }
-
+// If the user is authenticated and has the required role, proceed to the next middleware or route handler
     next();
 
   };

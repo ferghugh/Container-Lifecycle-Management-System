@@ -29,7 +29,7 @@ function requiresApproval(from, to) {
 
   return false;
 }
-
+// Get the approval action based on the transition
 function getApprovalAction(from, to) {
 
   if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
@@ -42,7 +42,7 @@ function getApprovalAction(from, to) {
 
   return `MoveToStage${to}`;
 }
-
+// Get the approval role based on the transition
 function getApprovalRole(from, to) {
 
   if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
@@ -55,7 +55,7 @@ function getApprovalRole(from, to) {
 
   return null;
 }
- 
+ // Check if a container is expired based on its use count and last cycle start date
 function isExpired(container) {
 
   // Rule 1: Expired after 14 production uses
@@ -67,7 +67,7 @@ function isExpired(container) {
   if (!container.last_cycle_start_at) {
     return false;
   }
-
+// Calculate the expiry date based on the last cycle start date
   const cycleStart = new Date(container.last_cycle_start_at);
   const expiryDate = new Date(cycleStart);
   expiryDate.setDate(expiryDate.getDate() + 30);

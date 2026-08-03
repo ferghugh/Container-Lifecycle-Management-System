@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-
+// MainLayout component that provides a consistent layout with a navbar and sidebar for the application.
 const MainLayout = () => {
   return (
     <>

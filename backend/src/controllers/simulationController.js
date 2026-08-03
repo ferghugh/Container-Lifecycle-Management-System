@@ -1,7 +1,7 @@
 // src/controllers/simulationController.js
 
 const simulationService = require("../services/simulationService");
-
+// Controller function to handle the request for running a simulation
 async function runSimulation(req, res) {
 
   try {
@@ -19,6 +19,7 @@ async function runSimulation(req, res) {
   }
 
 }
+// Controller function to handle the request for running multiple simulation cycles
 async function runSimulationCycles(req, res) {
 
   try {

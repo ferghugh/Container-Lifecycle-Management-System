@@ -7,25 +7,24 @@ const stageRules = require("../constants/stageRules");
 const movementModel = require("../models/movementModel");
 const approvalService = require("./approvalService");
 
-// ------------------------------------
-// GET ALL CONTAINERS
-// ------------------------------------
+
+// get all containers
+
 async function getAllContainers() {
   return await containerModel.getAllContainers();
 }
 
-// ------------------------------------
-// GET CONTAINER BY ID
-// ------------------------------------
+
+// get container by id
+
 async function getContainerById(id) {
   const container = await containerModel.getContainerById(id);
   if (!container) throw new Error("Container not found");
   return container;
 }
 
-// ------------------------------------
-// CREATE CONTAINER
-// ------------------------------------
+
+// create a container
 async function createContainer(containerData) {
   const { container_code } = containerData;
 
@@ -45,9 +44,7 @@ async function createContainer(containerData) {
   return await containerModel.createContainer(containerData);
 }
 
-// ------------------------------------
-// UPDATE CONTAINER (NO LIFECYCLE CHANGES)
-// ------------------------------------
+// update the container
 async function updateContainer(id, containerData) {
   const container = await containerModel.getContainerById(id);
   if (!container) throw new Error("Container not found");
@@ -59,11 +56,8 @@ async function updateContainer(id, containerData) {
   return await containerModel.updateContainer(id, updateData);
  
 }
-
-// ------------------------------------
-// MOVE CONTAINER THROUGH LIFECYCLE
-// ------------------------------------
-
+// main workflow engine for validating the container movements
+// enforceing lifecycle rules, and managing approval requirements
 async function moveContainer(id, movementData, user) {
   const container = await containerModel.getContainerById(id);
   if (!container) throw new Error("Container not found");
@@ -76,18 +70,16 @@ async function moveContainer(id, movementData, user) {
   if (previousStage === nextStage) {
     throw new Error("Container is already in this stage.");
   }
-
+  // ensure the requested lifecycle is valid
   if (!stageRules.isValidTransition(previousStage, nextStage)) {
     throw new Error(
       `Invalid stage transition from ${previousStage} to ${nextStage}`,
     );
   }
 
-  // ------------------------------------
-  // APPROVAL WORKFLOW
-  // ------------------------------------
-  let approval = null;
 
+  // approval workflow
+   let approval = null;
   if (
     !bypassApproval &&
     stageRules.requiresApproval(previousStage, nextStage)
@@ -99,6 +91,7 @@ async function moveContainer(id, movementData, user) {
     );
 
     if (!approval) {
+      //create a new approval request if one doesn't exist
       approval = await approvalService.createApproval(
         container,
         previousStage,
@@ -120,25 +113,20 @@ async function moveContainer(id, movementData, user) {
       throw new Error("Approval was rejected.");
     }
   }
-
-
-  // ------------------------------------
-  // UPDATE CONTAINER WORKFLOW
-  // ------------------------------------
+  // update container workflow
   const workflowUpdate = {
     current_status: nextStage,
     location_id: getLocationForStage(nextStage),
     requires_qa_approval: container.requires_qa_approval,
+    requires_supervisor_reset: container.requires_supervisor_reset,
     last_cycle_start_at: container.last_cycle_start_at,
     use_count: container.use_count,
     initial_qa_approved_at: container.initial_qa_approved_at,
   };
 
-  // ------------------------------------
-  // FIRST-TIME QA APPROVAL LIFECYCLE UPDATE
-  // ------------------------------------
 
-  // Production and expired containers have special lifecycle rules
+  // first time qa approve a container
+  // production and expired containers have special lifecycle rules
   if (nextStage === STAGES.PRODUCTION) {
    
     // First production entry completes the initial QA requirement
@@ -146,7 +134,7 @@ async function moveContainer(id, movementData, user) {
       workflowUpdate.requires_qa_approval = false;
       workflowUpdate.initial_qa_approved_at = new Date();
     }
-
+    // increment the production use count for the current lifecycle
     const newUseCount = (container.use_count ?? 0) + 1;
 
     let timeExpired = false;
@@ -171,15 +159,15 @@ async function moveContainer(id, movementData, user) {
       workflowUpdate.last_cycle_start_at = new Date();
     }
 
-    // ------------------------------------
-    // LIFECYCLE EXPIRED
-    // ------------------------------------
+    
+  
+    //check if the container's lifecycle has expired due to usage or time
     if (newUseCount > 14 || timeExpired) {
 
-
+      //automatically remove expired containers from production
       workflowUpdate.current_status = STAGES.CLEANING;
       workflowUpdate.location_id = getLocationForStage(STAGES.CLEANING);
-
+      workflowUpdate.requires_supervisor_reset = true;
       // Preserve the lifecycle usage count.
       //
       // If the container expires because it exceeded 14 production uses,
@@ -189,7 +177,7 @@ async function moveContainer(id, movementData, user) {
       // preserve the actual number of production uses completed.
       workflowUpdate.use_count = newUseCount > 14 ? 14 : container.use_count;
       await containerModel.updateContainerWorkflow(id, workflowUpdate);
-
+      // record the automatic movement to cleaning
       await movementModel.createMovement({
         container_id: container.id,
         from_stage: previousStage,
@@ -199,6 +187,7 @@ async function moveContainer(id, movementData, user) {
       });
 
       try {
+        // request supervisor approval before the container can begin a new lifecycle
         await approvalService.createApproval(
           container,
           STAGES.PRODUCTION,
@@ -206,7 +195,7 @@ async function moveContainer(id, movementData, user) {
           user,
         );
       } catch (err) {
-        // Ignore duplicate pending approval
+        // prevent duplicate supervisor approval requests
         if (
           err.message ===
           "A pending approval already exists for this container."
@@ -226,9 +215,7 @@ async function moveContainer(id, movementData, user) {
       };
     }
   }
-  // ------------------------------------
-  // RECORD MOVEMENT
-  // ------------------------------------
+  // record movement
   await movementModel.createMovement({
     container_id: container.id,
     from_stage: previousStage,
@@ -236,13 +223,11 @@ async function moveContainer(id, movementData, user) {
     moved_by_user_id: user.id,
     approved_by_user_id: approval ? approval.reviewed_by_user_id : null,
   });
-
+  // save the updated lifecycle information
   await containerModel.updateContainerWorkflow(id, workflowUpdate);
-
+   // retrieve the updated container information
   const updatedContainer = await containerModel.getContainerById(id);
-
-
-
+// return the movement result
   return {
     message: `Container moved from stage ${previousStage} to ${nextStage}.`,
     container: updatedContainer,
@@ -250,9 +235,7 @@ async function moveContainer(id, movementData, user) {
   };
 }
 
-// ------------------------------------
-// LOCATION MAPPING
-// ------------------------------------
+// location map
 function getLocationForStage(stage) {
   switch (stage) {
     case STAGES.RECEIVED:
@@ -267,6 +250,7 @@ function getLocationForStage(stage) {
       throw new Error("Unknown stage");
   }
 }
+// retrieve a container by its unique code
 async function getContainerByCode(code) {
 
     const container = await containerModel.getContainerByCode(code);

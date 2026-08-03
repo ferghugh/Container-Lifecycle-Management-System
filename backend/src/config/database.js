@@ -8,7 +8,7 @@ const mysql = require('mysql2/promise');
 
 // Create a connection pool with the database configuration
 
-
+// The connection pool allows for efficient management of multiple database connections
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,    
