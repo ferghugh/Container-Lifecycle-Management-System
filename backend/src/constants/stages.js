@@ -18,6 +18,7 @@ async function createApproval(container, previousStage, nextStage, user) {
     throw new Error("A pending approval already exists for this container.");
   }
 
+  
 let requiredRole;
 
 if (container.requires_qa_approval) {

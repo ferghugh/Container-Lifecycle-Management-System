@@ -7,8 +7,12 @@ async function getDashboardSummary() {
 async function getAnalytics() {
     return await dashboardModel.getAnalytics();
 }
-
+// Retrieve regression data for the dashboard
+async function getRegressionData() {
+    return await dashboardModel.getRegressionData();
+}
 module.exports = {
     getDashboardSummary,
     getAnalytics,
+    getRegressionData,
 };

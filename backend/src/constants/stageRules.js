@@ -59,7 +59,7 @@ function getApprovalRole(from, to) {
 function isExpired(container) {
 
   // Rule 1: Expired after 14 production uses
-  if (container.use_count >= 14) {
+  if (container.use_count > 14) {
     return true;
   }
 
@@ -69,9 +69,13 @@ function isExpired(container) {
   }
 // Calculate the expiry date based on the last cycle start date
   const cycleStart = new Date(container.last_cycle_start_at);
-  const expiryDate = new Date(cycleStart);
-  expiryDate.setDate(expiryDate.getDate() + 30);
 
+  const expiryDate = new Date(cycleStart);
+  //Allow the full 30th calendar day
+  expiryDate.setDate(expiryDate.getDate() + 31);
+  //Expire at midnight at the start of the 31st day
+  expiryDate.setHours(0, 0, 0, 0);
+  // Check if the current date is greater than or equal to the expiry date
   return new Date() > expiryDate;
 }
 

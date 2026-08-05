@@ -32,6 +32,7 @@ app.use("/api/processstages", processStageRoutes);
 app.use("/api/approvals", approvalRoutes);
 app.use("/api/simulations", simulationRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/dashboard/regression", dashboardRoutes);
 
 //check route to verify that the server is running
 app.get('/', (req, res) => {

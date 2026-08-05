@@ -68,13 +68,13 @@ async function getApprovalById(id) {
 }
 // Update the status of an approval request
 async function reviewApproval(id, reviewData) {
-
+// Destructure the review data to extract status, reviewer ID, and comments
   const {
     status,
     reviewed_by_user_id,
     comments,
   } = reviewData;
-
+// Update the approval request in the database with the new status, reviewer ID, and comments
   const [result] = await db.query(
     `UPDATE approval_requests
      SET
@@ -95,7 +95,8 @@ async function reviewApproval(id, reviewData) {
 }
 // Retrieve the latest approval for a container movement
 async function getLatestApproval(containerId, requestedAction) {
-
+// Query to fetch the latest approval request for a specific container and action, 
+// ordered by the request timestamp in descending order
   const [rows] = await db.query(
     `SELECT *
      FROM approval_requests
@@ -110,7 +111,7 @@ async function getLatestApproval(containerId, requestedAction) {
 }
 // Retrieve all pending approval requests
 async function getPendingApprovals() {
-
+// Query to fetch all pending approval requests along with their associated container codes
   const [rows] = await db.query(`
     SELECT
       ar.*,

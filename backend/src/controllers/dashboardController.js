@@ -42,8 +42,20 @@ async function getAnalytics(req, res) {
     }
 
 }
+// Controller function to handle the request for regression data
+async function getRegressionData(req, res) {
+    try {
+        const data = await dashboardService.getRegressionData();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+}
 
 module.exports = {
     getDashboard,
     getAnalytics,
+    getRegressionData,
 };

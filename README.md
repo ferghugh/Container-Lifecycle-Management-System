@@ -2,9 +2,9 @@
 
 ## Overview
 
-The Container Lifecycle Management System is a full stack web applicationj designed to manage the movement and lifecycle of reusable production containers within a controlled manufacturing enviornment.
+The Container Lifecycle Management System is a full-stack web application designed to manage the movement and lifecycle of reusable production containers within a controlled pharmaceutical manufacturing environment.
 
-The system moves beyond normal container tracking by enforcing business workflows,recording approvals,managing quality observations,maintaining a complete audit trail, and generating operational analytics.All historical operational data is produced through a simulation engine that models realistic container lifecycles,enabling dashboard reporting and predictive analytics.
+The application digitises the complete container lifecycle by enforcing business rules, managing QA and Supervisor approval workflows, maintaining a comprehensive audit trail, and providing real-time operational dashboards and analytics. A built-in simulation engine generates realistic operational data to support testing, evaluation, and reporting.
 
 
 ## Technologies
@@ -39,22 +39,38 @@ User authentication and role based access
 container lifecycle management
 workflow enforcement
 QA and Supervisor approvals
-Observation management
-Audit logging
+Automatic lefecycle expiry based on production use and calendar days
 Operational dashboard
+Operational Analytics
+QR code and barcode Scanning
+Movement History and autit logging
 Simulation engine for operational data generation
-Regression analysis performed on simulated operational data
+
 
 # Analytics
 
 SQL Reporting
 Operational Dashboard
+Lifecycle usage
+Movement trends
+Operational KPI reporting
 
 # Future Enhancements
 
-Apply regression analysis to the simulated operational dataset to predict container turnaround times.
-Extend predictive analytics using historical lifecycle data.
-Develop machine learning models for forecasting container utilisation.
+Extend predictive analytics using larger operational datasets
+Introduce regression analysis using long term historical lifecycle data
+Develop machine learning models to forecast better container utilisation
+Integrate with Manufacturing Execution Systems(MES) or ERP platforms
+Implement automated notifications for QA approvals and lifecycle expiry
+
+# Key business rules
+Containers require QA approval before their first introduction to production
+Containers may be used for a maximum of 14 production runs
+Containers remain valid for a maximum of 30 calendar days per lifecycle
+The 14th production run is allowed, the 15th attempt will automatically expire 
+Expired containers are automatically sent to cleaning
+Supervisor approval is required before a new lifecycle can begin
+Every container movement is recored to provide complete traceability
 
 ## Author
 Fergal Hughes

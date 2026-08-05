@@ -66,7 +66,7 @@ async function createContainer(containerData) {
 
 //update existing container details in the database
 async function updateContainerWorkflow(id, workflowData) {
-
+// Destructure the workflow data to extract relevant fields
   const {
     current_status,
     location_id,
@@ -76,7 +76,7 @@ async function updateContainerWorkflow(id, workflowData) {
      requires_supervisor_reset,
     initial_qa_approved_at,
   } = workflowData;
-
+// Update the container's workflow details in the database
   const [result] = await db.query(
     
     `UPDATE containers
@@ -109,7 +109,7 @@ async function updateContainerWorkflow(id, workflowData) {
 // Update administrative container details
 async function updateContainer(id, containerData) {
   const { container_code } = containerData;
-
+// Update the container's code in the database
   const [result] = await db.query(
     "UPDATE containers SET container_code = ? WHERE id = ?",
     [container_code, id],
@@ -133,7 +133,7 @@ async function resetLifecycle(containerId) {
 }
 // Update production use count and last cycle start date
 async function updateProductionUse(id, useCount, lastCycleStartAt) {
-
+// Update the container's use count and last cycle start date in the database
   const [result] = await db.query(
     `UPDATE containers
      SET

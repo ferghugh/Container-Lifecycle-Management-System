@@ -6,17 +6,14 @@ const authMiddleware = require("../middleware/authMiddleware");
 const dashboardController = require("../controllers/dashboardController");
 
 // Define the route for fetching analytics data, protected by authentication middleware
-router.get(
-    "/analytics",
-    authMiddleware,
-    dashboardController.getAnalytics
-);
+router.get("/analytics", authMiddleware, dashboardController.getAnalytics);
+
+router.get("/", authMiddleware, dashboardController.getDashboard);
 
 router.get(
-    "/",
-    authMiddleware,
-    dashboardController.getDashboard
+  "/regression",
+  authMiddleware,
+  dashboardController.getRegressionData,
 );
-
 
 module.exports = router;

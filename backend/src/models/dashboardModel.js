@@ -131,8 +131,24 @@ FIELD(rangeName,'0-3','4-7','8-11','12-13','14');
     movementTrend,
   };
 }
+// Retrieve regression data for analysis
+async function getRegressionData() {
+  const [rows] = await db.query(`
+      SELECT
+          container_code,
+          use_count,
+          DATEDIFF(CURDATE(), last_cycle_start_at) AS lifecycleDays
+      FROM containers
+      WHERE last_cycle_start_at IS NOT NULL
+        AND use_count > 0
+      ORDER BY use_count;
+  `);
+
+  return rows;
+}
 
 module.exports = {
   getDashboardSummary,
   getAnalytics,
+  getRegressionData,
 };
