@@ -213,7 +213,7 @@ async function moveContainer(id, movementData, user) {
         ) {
           return {
             message:
-              `Container is already in CLEANING awaiting ${approval.required_role} approval.`,
+              `Container is already in CLEANING awaiting QA approval.`,
           };
         }
 
@@ -222,7 +222,7 @@ async function moveContainer(id, movementData, user) {
 
       return {
         message:
-          `Container lifecycle expired. Container moved to CLEANING awaiting ${approval.required_role} approval.`,
+          `Container lifecycle expired. Container moved to CLEANING awaiting Supervisor approval.`,
       };
     }
   }

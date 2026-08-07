@@ -22,7 +22,7 @@ function isValidTransition(from, to) {
 }
 
 function requiresApproval(from, to) {
-// Initial QA approval before first Production entry
+  // Initial QA approval before first Production entry
   if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
     return true;
   }
@@ -31,7 +31,6 @@ function requiresApproval(from, to) {
 }
 // Get the approval action based on the transition
 function getApprovalAction(from, to) {
-
   if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
     return "QAApproval";
   }
@@ -45,19 +44,26 @@ function getApprovalAction(from, to) {
 // Get the approval role based on the transition
 function getApprovalRole(from, to) {
 
-  if (from === STAGES.CLEAN_STORAGE && to === STAGES.PRODUCTION) {
+  // Initial QA approval before first Production entry
+  if (
+    from === STAGES.CLEAN_STORAGE &&
+    to === STAGES.PRODUCTION
+  ) {
     return "QA";
   }
 
-  if (from === STAGES.PRODUCTION && to === STAGES.CLEANING) {
+  // Supervisor approval for moving from Production to Cleaning
+  if (
+    from === STAGES.PRODUCTION &&
+    to === STAGES.CLEANING
+  ) {
     return "SUPERVISOR";
   }
 
   return null;
 }
- // Check if a container is expired based on its use count and last cycle start date
+// Check if a container is expired based on its use count and last cycle start date
 function isExpired(container) {
-
   // Rule 1: Expired after 14 production uses
   if (container.use_count > 14) {
     return true;
@@ -67,7 +73,7 @@ function isExpired(container) {
   if (!container.last_cycle_start_at) {
     return false;
   }
-// Calculate the expiry date based on the last cycle start date
+  // Calculate the expiry date based on the last cycle start date
   const cycleStart = new Date(container.last_cycle_start_at);
 
   const expiryDate = new Date(cycleStart);

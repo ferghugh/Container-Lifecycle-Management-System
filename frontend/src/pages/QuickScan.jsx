@@ -7,7 +7,7 @@ import { getContainerByCode } from "../services/containerService";
 // to quickly access container details.
 const QuickScan = () => {
   const navigate = useNavigate();
-
+// useEffect hook to initialize the QR code scanner when the component mounts
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
       "reader",
@@ -19,14 +19,15 @@ const QuickScan = () => {
     );
     // Render the scanner and handle the decoded text to navigate to the container details page
     scanner.render(
+      // Callback function that handles the decoded text from the QR code or barcode
       async (decodedText) => {
         try {
           console.log("Decoded:", decodedText);
-
+         // Fetch the container details using the decoded text (container code)
           const container = await getContainerByCode(decodedText.trim());
-
+          // Clear the scanner after a successful scan to prevent multiple scans
           await scanner.clear();
-
+          // Navigate to the container details page using the container ID
           navigate(`/containers/${container.id}`);
         } catch (error) {
           console.error("Container lookup failed:", error);
@@ -37,12 +38,12 @@ const QuickScan = () => {
         // Ignore continuous scan errors
       },
     );
-
+  // Cleanup function to clear the scanner when the component unmounts
     return () => {
       scanner.clear().catch(() => {});
     };
   }, [navigate]);
-
+// Render the QuickScan component UI, including instructions and the scanner area
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>

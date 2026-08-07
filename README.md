@@ -67,10 +67,14 @@ Implement automated notifications for QA approvals and lifecycle expiry
 Containers require QA approval before their first introduction to production
 Containers may be used for a maximum of 14 production runs
 Containers remain valid for a maximum of 30 calendar days per lifecycle
-The 14th production run is allowed, the 15th attempt will automatically expire 
-Expired containers are automatically sent to cleaning
+The 14th production run is allowed, the 15th attempt will automatically expire the container lifecycle
+Expired containers are automatically sent to Cleaning
 Supervisor approval is required before a new lifecycle can begin
 Every container movement is recored to provide complete traceability
+
+# Project Status
+The project has been completed as part of the Higher Diploma in Science (Software Development). 
+The application demonstrates a complete container lifecycle, including workflow validation, approval management, operational dashboards, QR code scanning, and simulation-driven testing.
 
 ## Author
 Fergal Hughes
