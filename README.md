@@ -39,11 +39,11 @@ User authentication and role based access
 container lifecycle management
 workflow enforcement
 QA and Supervisor approvals
-Automatic lefecycle expiry based on production use and calendar days
+Automatic lifecycle expiry based on production use and calendar days
 Operational dashboard
 Operational Analytics
 QR code and barcode Scanning
-Movement History and autit logging
+Movement History and audit logging
 Simulation engine for operational data generation
 
 
@@ -70,7 +70,7 @@ Containers remain valid for a maximum of 30 calendar days per lifecycle
 The 14th production run is allowed, the 15th attempt will automatically expire the container lifecycle
 Expired containers are automatically sent to Cleaning
 Supervisor approval is required before a new lifecycle can begin
-Every container movement is recored to provide complete traceability
+Every container movement is recorded to provide complete traceability
 
 # Project Status
 The project has been completed as part of the Higher Diploma in Science (Software Development). 
