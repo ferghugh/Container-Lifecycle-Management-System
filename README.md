@@ -63,7 +63,7 @@ npm test
 ## Features
 
 User authentication and role-based access control
-Container lifecycle management
+Container lifecycle npm test
 Workflow validation and enforcement
 QA and Supervisor approval workflows
 Automatic lifecycle expiry based on production use and calendar duration

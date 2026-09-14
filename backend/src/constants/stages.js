@@ -18,7 +18,7 @@ async function createApproval(container, previousStage, nextStage, user) {
     throw new Error("A pending approval already exists for this container.");
   }
 
-  
+  // Determine the required role for approval based on the container's properties
 let requiredRole;
 
 if (container.requires_qa_approval) {
@@ -37,6 +37,7 @@ else {
 
 }
 
+// Create the approval request
   const approvalId = await approvalModel.createApproval({
     
     container_id: container.id,
@@ -54,6 +55,7 @@ else {
     requested_by_user_id: user.id,
     
   });
+  // Log the approval creation details for debugging
 console.log({
   containerId: container.id,
   initialQaApprovedAt: container.initial_qa_approved_at,
