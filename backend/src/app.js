@@ -9,9 +9,7 @@ const cors = require('cors');
 // Create an instance of the Express application
 const app = express();
 
-
 //Middleware to enable CORS for all routes
-
 app.use(cors()); 
 
 // Middleware to parse incoming JSON requests
@@ -22,7 +20,6 @@ const authRoutes = require("./routes/authRoutes");
 const containerRoutes = require("./routes/containerRoutes");
 const processStageRoutes = require("./routes/processStageRoutes");
 const approvalRoutes = require("./routes/approvalRoutes");
-const simulationRoutes = require("./routes/simulationRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
 // Use the authentication routes for any requests to /api/auth
@@ -30,7 +27,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/containers", containerRoutes);
 app.use("/api/processstages", processStageRoutes);
 app.use("/api/approvals", approvalRoutes);
-app.use("/api/simulations", simulationRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/dashboard/regression", dashboardRoutes);
 

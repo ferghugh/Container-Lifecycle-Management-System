@@ -1,5 +1,6 @@
 const request = require("supertest");
 const app = require("../../app");
+const db = require("../../config/database");
 
 async function createTestContainer(token) {
   const response = await request(app)
@@ -13,4 +14,24 @@ async function createTestContainer(token) {
   return response.body.id;
 }
 
-module.exports = { createTestContainer };
+async function deleteTestContainer(containerId) {
+  await db.execute(
+    "DELETE FROM approval_requests WHERE container_id = ?",
+    [containerId]
+  );
+
+  await db.execute(
+    "DELETE FROM container_movements WHERE container_id = ?",
+    [containerId]
+  );
+
+  await db.execute(
+    "DELETE FROM containers WHERE id = ?",
+    [containerId]
+  );
+}
+
+module.exports = {
+  createTestContainer,
+  deleteTestContainer
+};

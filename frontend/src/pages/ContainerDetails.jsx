@@ -1,3 +1,6 @@
+// ContainerDetails.jsx
+// This component displays detailed information about a specific container,
+//  including its status, location, and QR/barcode representation.
 import {
   Box,
   Typography,
@@ -15,14 +18,23 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+// React imports
 import { useEffect, useState } from "react";
+// react-router-dom imports
 import { useParams } from "react-router-dom";
+// Service imports for fetching container data and moving containers
 import { getContainerById, moveContainer } from "../services/containerService";
+// Constants for container status, locations, and transitions
 import STATUS from "../constants/status";
+// Constants for container locations and transitions
 import LOCATIONS from "../constants/locations";
+// Constants for container transitions
 import TRANSITIONS from "../constants/transitions";
+// React Router import for navigation
 import { useNavigate } from "react-router-dom";
+// QR Code and Barcode imports
 import QRCode from "react-qr-code";
+// Barcode import for generating barcodes
 import Barcode from "react-barcode";
 // ContainerDetails component that fetches and displays detailed information about a specific container,
 //  including its status, location, and QR/barcode representation. 
@@ -81,6 +93,7 @@ const ContainerDetails = () => {
       alert(error.response?.data?.message || "Failed to move container.");
     }
   };
+  // Render the container details page with information, QR code, barcode, and move container functionality
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" sx={{ fontWeight: 600 }}>
@@ -211,6 +224,7 @@ const ContainerDetails = () => {
                 justifyContent: "center",
               }}
             >
+              
               <Barcode
                 value={container.container_code}
                 format="CODE128"

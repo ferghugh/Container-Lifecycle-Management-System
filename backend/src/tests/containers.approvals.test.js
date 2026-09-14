@@ -7,7 +7,7 @@ const {
   getSupervisorToken
 } = require("./helpers/authHelper");
 // Helper functions for container lifecycle operations
-const { createTestContainer } = require("./helpers/containers");
+const { createTestContainer,deleteTestContainer, } = require("./helpers/containers");
 // Helper functions for container lifecycle operations
 const { move } = require("./helpers/lifecycle");
 // Helper functions for approval workflows
@@ -33,6 +33,12 @@ describe("Container API - Approvals", () => {
 
     await move(containerId, operatorToken, 2);
     await move(containerId, operatorToken, 3);
+  });
+    afterEach(async () => {
+    if (containerId) {
+      await deleteTestContainer(containerId);
+      containerId = null;
+    }
   });
 // Test to create a QA approval request
   test("should create a QA approval request", async () => {

@@ -1,5 +1,6 @@
 import { Card, CardContent, Typography } from "@mui/material";
-
+// SummaryCard component that displays a title and a value in a card format,
+//  used for showing KPIs or summary information.
 const SummaryCard = ({ title, value }) => {
   return (
     <Card

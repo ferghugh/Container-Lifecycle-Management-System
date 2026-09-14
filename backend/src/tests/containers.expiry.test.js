@@ -4,7 +4,7 @@ const {
   getSupervisorToken
 } = require("./helpers/authHelper");
 
-const { createTestContainer } = require("./helpers/containers");
+const { createTestContainer,deleteTestContainer } = require("./helpers/containers");
 
 const {
   move,
@@ -30,6 +30,13 @@ describe("Container API - Expiry Rules", () => {
 
     await move(containerId, operatorToken, 2);
     await move(containerId, operatorToken, 3);
+  });
+
+   afterEach(async () => {
+    if (containerId) {
+      await deleteTestContainer(containerId);
+      containerId = null;
+    }
   });
 // Test to ensure containers expire after 30 days
   test("should expire after 30 days", async () => {

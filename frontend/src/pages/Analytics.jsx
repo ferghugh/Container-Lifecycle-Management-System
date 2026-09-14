@@ -1,6 +1,11 @@
+// react library imports
 import { useEffect, useState } from "react";
+// react-router-dom imports
 import { useNavigate, useSearchParams } from "react-router-dom";
+// material-ui imports
 import { Box, Grid, Paper, Typography, CircularProgress } from "@mui/material";
+
+//react-chartjs-2 and chart.js imports
 import {
   Chart as ChartJS,
   ArcElement,
@@ -14,6 +19,7 @@ import {
   Legend,
 } from "chart.js";
 import { Doughnut, Bar, Line } from "react-chartjs-2";
+// service import for fetching analytics data
 import { getAnalytics } from "../services/analyticsService";
 
 ChartJS.register(
@@ -33,12 +39,13 @@ function Analytics() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Fetch analytics data when the component mounts
   useEffect(() => {
     async function loadAnalytics() {
       try {
         const data = await getAnalytics();
         setAnalytics(data);
-      } catch {
+      } catch(error) {
         console.error("Failed to load analytics:", error);
       } finally {
         setLoading(false);
@@ -48,6 +55,7 @@ function Analytics() {
     loadAnalytics();
   }, []);
 
+  // Show a loading spinner while analytics data is being fetched
   if (loading) {
     return (
       <Box
@@ -139,7 +147,7 @@ function Analytics() {
       },
     },
   };
-
+// Render the analytics page with KPI cards and charts
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" fontWeight="bold">

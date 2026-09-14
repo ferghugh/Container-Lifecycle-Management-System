@@ -2,7 +2,7 @@ const request = require("supertest");
 const app = require("../app");
 
 const { getOperatorToken, getQAToken } = require("./helpers/authHelper");
-const { createTestContainer } = require("./helpers/containers");
+const { createTestContainer,deleteTestContainer, } = require("./helpers/containers");
 
 // Test suite for basic CRUD operations on containers
 describe("Container API - Basic CRUD", () => {
@@ -22,14 +22,18 @@ describe("Container API - Basic CRUD", () => {
     expect(Array.isArray(response.body)).toBe(true);
   });
 // Test to create a new container
-  test("should create and update a container", async () => {
-    const id = await createTestContainer(qaToken);
+ test("should create and update a container", async () => {
+  const id = await createTestContainer(qaToken);
 
+  try {
     const response = await request(app)
       .put(`/api/containers/${id}`)
       .set("Authorization", `Bearer ${qaToken}`)
       .send({ container_code: `UPDATED${Date.now()}` });
 
     expect(response.statusCode).toBe(200);
-  });
+  } finally {
+    await deleteTestContainer(id);
+  }
+});
 });
